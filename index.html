@@ -3,188 +3,182 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PetCare Europe | Multi-Language Hub</title>
+<title>Petster Europe | Professional Pet Shop</title>
 
 <style>
     :root {
-        --primary: #2d3436;
-        --accent: #0984e3;
-        --light: #dfe6e9;
-        --success: #00b894;
+        --teal: #3a7d7e;
+        --light-bg: #f4f7f6;
+        --text: #2d3436;
     }
 
     body {
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        margin: 0; padding: 0; background: #f9f9f9; color: #2d3436;
+        margin: 0; padding: 0; background: white; color: var(--text);
     }
 
-    /* Language Bar */
-    .lang-bar {
-        background: #eee; padding: 10px; text-align: right;
-        display: flex; justify-content: flex-end; gap: 10px; padding-right: 20px;
-    }
-    .lang-bar button {
-        width: auto; padding: 5px 10px; font-size: 12px; background: white; color: var(--primary);
-        border: 1px solid #ccc; cursor: pointer;
-    }
-
-    nav {
-        background: white; padding: 20px;
+    /* Top Language Bar */
+    .top-nav {
+        background: var(--teal); color: white;
+        padding: 10px; text-align: center; font-size: 11px;
         display: flex; justify-content: center; gap: 20px;
-        position: sticky; top: 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        z-index: 1000;
+        font-weight: bold;
     }
 
-    nav a { text-decoration: none; color: var(--primary); font-weight: 600; font-size: 14px; }
+    .top-nav span { cursor: pointer; text-decoration: underline; }
 
+    /* Main Header */
     header {
-        background: linear-gradient(135deg, #0984e3, #6c5ce7);
-        color: white; padding: 40px 20px; text-align: center;
+        padding: 15px; text-align: center; border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .logo { font-size: 28px; font-weight: 900; color: var(--teal); letter-spacing: 3px; }
+
+    .search-container {
+        padding: 10px 20px; display: flex; justify-content: center;
+    }
+    .search-container input {
+        width: 100%; max-width: 500px; padding: 12px; border: 1px solid #ccc; border-radius: 4px 0 0 4px; outline: none;
+    }
+    .search-container button {
+        background: var(--teal); color: white; border: none; padding: 0 15px; border-radius: 0 4px 4px 0; cursor: pointer;
     }
 
-    .container { max-width: 800px; margin: auto; padding-bottom: 50px; }
+    /* Category Grid */
+    .grid-container {
+        display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 15px;
+    }
+    .category-card {
+        position: relative; background: #eee; height: 200px; overflow: hidden;
+        border-radius: 5px; display: flex; align-items: flex-end;
+    }
+    .category-card img {
+        width: 100%; height: 100%; object-fit: cover; position: absolute; transition: 0.5s;
+    }
+    .category-card:hover img { transform: scale(1.1); }
 
-    section {
-        display: none; background: white; margin: 20px;
-        padding: 30px; border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    .category-label {
+        position: relative; z-index: 1; background: rgba(255,255,255,0.95);
+        width: 100%; text-align: center; padding: 10px; font-weight: bold; font-size: 12px;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
     }
 
-    section.active { display: block; }
-
-    .card {
-        background: #f1f2f6; padding: 20px; margin: 15px 0;
-        border-radius: 15px; border-left: 6px solid var(--accent);
+    /* Footer Section */
+    footer {
+        background: var(--teal); color: white; padding: 40px 25px; margin-top: 40px;
     }
+    .footer-section { margin-bottom: 25px; }
+    .footer-section h3 { font-size: 16px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 15px; }
+    .footer-links { list-style: none; padding: 0; }
+    .footer-links li { margin: 8px 0; font-size: 13px; opacity: 0.8; }
 
-    input, select, button {
-        padding: 12px; width: 100%; border-radius: 10px;
-        border: 1px solid #ddd; margin-top: 10px; box-sizing: border-box;
-    }
+    .payment-icons { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+    .pay-box { background: white; color: var(--teal); padding: 4px 8px; border-radius: 2px; font-weight: bold; font-size: 10px; }
 
-    button { background: var(--accent); color: white; border: none; cursor: pointer; font-weight: bold; }
-
-    .share-btn { background: #25D366; margin-top: 15px; } /* WhatsApp Green */
 </style>
 </head>
 <body>
 
-<div class="lang-bar">
-    <button onclick="changeLang('en')">English 🇬🇧</button>
-    <button onclick="changeLang('de')">Deutsch 🇩🇪</button>
-    <button onclick="changeLang('fr')">Français 🇫🇷</button>
+<div class="top-nav">
+    <span onclick="changeLang('en')">ENGLISH</span>
+    <span onclick="changeLang('de')">DEUTSCH</span>
+    <span onclick="changeLang('fr')">FRANÇAIS</span>
 </div>
-
-<nav>
-    <a href="#" onclick="showSection('home')" id="nav-home">Home</a>
-    <a href="#" onclick="showSection('calc')" id="nav-calc">Calculators</a>
-    <a href="#" onclick="showSection('remind')" id="nav-remind">Reminder</a>
-</nav>
 
 <header>
-    <h1 id="header-title">PetCare Europe</h1>
-    <p id="header-sub">Premium Health Tools</p>
+    <div class="logo">PETSTER</div>
 </header>
 
-<div class="container">
-    <section id="home" class="active">
-        <h2 id="home-h2">Welcome</h2>
-        <p id="home-p">Select a tool from the menu to start taking care of your pet.</p>
-    </section>
-
-    <section id="calc">
-        <h2 id="calc-h2">Age Calculator</h2>
-        <select id="petType">
-            <option value="dog">Dog</option>
-            <option value="cat">Cat</option>
-        </select>
-        <input type="number" id="petAge" placeholder="Age in years">
-        <button onclick="calculateAge()" id="btn-calc">Convert</button>
-        <p id="result" style="font-weight: bold; margin-top: 10px;"></p>
-        
-        <!-- Social Share Button -->
-        <button onclick="shareResult()" class="share-btn" id="btn-share">Share on WhatsApp</button>
-    </section>
-
-    <section id="remind">
-        <h2 id="remind-h2">Health Reminder</h2>
-        <input type="text" id="task" placeholder="Task (e.g. Vaccination)">
-        <input type="time" id="remindTime">
-        <button onclick="setReminder()" id="btn-remind">Set Alert</button>
-        <p id="remindMsg"></p>
-    </section>
+<div class="search-container">
+    <input type="text" id="searchInput" placeholder="WHAT ARE YOU LOOKING FOR?">
+    <button>🔍</button>
 </div>
 
+<!-- Category Grid -->
+<div class="grid-container">
+    <!-- Cats Section -->
+    <div class="category-card">
+        <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400" alt="Cats">
+        <div class="category-label" id="cat-label">CAT ACCESSORIES</div>
+    </div>
+    
+    <!-- Dogs Section -->
+    <div class="category-card">
+        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400" alt="Dogs">
+        <div class="category-label" id="dog-label">DOG ACCESSORIES</div>
+    </div>
+
+    <!-- Small Pets (Instead of Horse) -->
+    <div class="category-card">
+        <img src="https://images.unsplash.com/photo-1585110396054-c8112c91b55a?w=400" alt="Small Pets">
+        <div class="category-label" id="small-label">SMALL PETS GEAR</div>
+    </div>
+
+    <!-- Health & Care -->
+    <div class="category-card">
+        <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400" alt="Health">
+        <div class="category-label" id="health-label">HEALTH & HYGIENE</div>
+    </div>
+</div>
+
+<footer>
+    <div class="footer-section">
+        <h3 id="footer-contact">CONTACT US</h3>
+        <p style="font-size: 13px;">Petster Europe Hub<br>International Support Team<br>contact@petster.eu</p>
+    </div>
+
+    <div class="footer-section">
+        <h3 id="footer-info">INFORMATION</h3>
+        <ul class="footer-links">
+            <li>About Us</li>
+            <li>Shipping Policy</li>
+            <li>Returns & Exchanges</li>
+            <li>Terms & Conditions</li>
+        </ul>
+    </div>
+
+    <div class="payment-icons">
+        <div class="pay-box">VISA</div>
+        <div class="pay-box">PAYPAL</div>
+        <div class="pay-box">KLARNA</div>
+        <div class="pay-box">MASTERCARD</div>
+        <div class="pay-box">APPLE PAY</div>
+    </div>
+</footer>
+
 <script>
-    const translations = {
+    const content = {
         en: {
-            home: "Home", calc: "Calculators", remind: "Reminder",
-            title: "PetCare Europe", sub: "Premium Health Tools",
-            welcome: "Welcome", welcomeP: "Select a tool from the menu.",
-            ageH2: "Age Calculator", btnCalc: "Convert", share: "Share on WhatsApp",
-            remH2: "Health Reminder", btnRem: "Set Alert", taskPl: "Task (e.g. Food)"
+            search: "WHAT ARE YOU LOOKING FOR?",
+            cat: "CAT ACCESSORIES", dog: "DOG ACCESSORIES",
+            small: "SMALL PETS GEAR", health: "HEALTH & HYGIENE",
+            contact: "CONTACT US", info: "INFORMATION"
         },
         de: {
-            home: "Startseite", calc: "Rechner", remind: "Erinnerung",
-            title: "PetCare Europa", sub: "Premium-Gesundheitstools",
-            welcome: "Willkommen", welcomeP: "Wählen Sie ein Tool aus dem Menü.",
-            ageH2: "Altersrechner", btnCalc: "Konvertieren", share: "Auf WhatsApp teilen",
-            remH2: "Gesundheitserinnerung", btnRem: "Alarm einstellen", taskPl: "Aufgabe (z.B. Futter)"
+            search: "WAS SUCHEN SIE?",
+            cat: "KATZENZUBEHÖR", dog: "HUNDEZUBEHÖR",
+            small: "KLEINTIERBEDARF", health: "GESUNDHEIT & HYGIENE",
+            contact: "KONTAKTIEREN SIE UNS", info: "INFORMATIONEN"
         },
         fr: {
-            home: "Accueil", calc: "Calculateurs", remind: "Rappel",
-            title: "PetCare Europe", sub: "Outils de santé premium",
-            welcome: "Bienvenue", welcomeP: "Sélectionnez un outil dans le menu.",
-            ageH2: "Calculateur d'âge", btnCalc: "Convertir", share: "Partager sur WhatsApp",
-            remH2: "Rappel de santé", btnRem: "Régler l'alerte", taskPl: "Tâche (ex: Vaccin)"
+            search: "QUE CHERCHEZ-VOUS?",
+            cat: "ACCESSOIRES CHAT", dog: "ACCESSOIRES CHIEN",
+            small: "PETITS ANIMAUX", health: "SANTÉ ET HYGIÈNE",
+            contact: "CONTACTEZ-NOUS", info: "INFORMATIONS"
         }
     };
 
     function changeLang(lang) {
-        document.getElementById('nav-home').innerText = translations[lang].home;
-        document.getElementById('nav-calc').innerText = translations[lang].calc;
-        document.getElementById('nav-remind').innerText = translations[lang].remind;
-        document.getElementById('header-title').innerText = translations[lang].title;
-        document.getElementById('header-sub').innerText = translations[lang].sub;
-        document.getElementById('home-h2').innerText = translations[lang].welcome;
-        document.getElementById('home-p').innerText = translations[lang].welcomeP;
-        document.getElementById('calc-h2').innerText = translations[lang].ageH2;
-        document.getElementById('btn-calc').innerText = translations[lang].btnCalc;
-        document.getElementById('btn-share').innerText = translations[lang].share;
-        document.getElementById('remind-h2').innerText = translations[lang].remH2;
-        document.getElementById('btn-remind').innerText = translations[lang].btnRem;
-        document.getElementById('task').placeholder = translations[lang].taskPl;
-    }
-
-    function showSection(id) {
-        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-    }
-
-    function calculateAge(){
-        let age = document.getElementById("petAge").value;
-        let type = document.getElementById("petType").value;
-        if(age) {
-            let res = (type === 'dog') ? age * 7 : age * 6;
-            document.getElementById("result").innerText = "Human years: " + res;
-        }
-    }
-
-    function shareResult() {
-        let res = document.getElementById("result").innerText;
-        if(res) {
-            window.open("https://api.whatsapp.com/send?text=My pet is " + res + " - Check yours at PetCare Europe!");
-        } else { alert("Calculate age first!"); }
-    }
-
-    function setReminder() {
-        let task = document.getElementById("task").value;
-        let time = document.getElementById("remindTime").value;
-        if(task && time) {
-            document.getElementById("remindMsg").innerText = "Reminder set for " + task + " at " + time;
-            // Basic logic to alert when time matches (simplified for web)
-            alert("Notification set! Keep this page open.");
-        }
+        document.getElementById('searchInput').placeholder = content[lang].search;
+        document.getElementById('cat-label').innerText = content[lang].cat;
+        document.getElementById('dog-label').innerText = content[lang].dog;
+        document.getElementById('small-label').innerText = content[lang].small;
+        document.getElementById('health-label').innerText = content[lang].health;
+        document.getElementById('footer-contact').innerText = content[lang].contact;
+        document.getElementById('footer-info').innerText = content[lang].info;
     }
 </script>
+
 </body>
-</html>
+    </html>
+            
