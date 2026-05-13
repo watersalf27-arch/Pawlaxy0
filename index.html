@@ -3,189 +3,184 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pet Care Hub Pro</title>
+<title>PetCare Europe | Premium Hub</title>
 
 <style>
     :root {
-        --primary: #ff914d;
-        --secondary: #ff6b00;
-        --light: #fff3eb;
-        --bg: #f5f5f5;
+        --primary: #2d3436; /* Dark professional gray */
+        --accent: #0984e3;  /* European Blue */
+        --light: #dfe6e9;
+        --success: #00b894;
     }
 
     body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0; padding: 0; background: var(--bg);
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        margin: 0; padding: 0; background: #f9f9f9; color: #2d3436;
     }
 
-    /* Navigation Menu */
     nav {
-        background: white;
-        padding: 15px;
-        display: flex;
-        justify-content: space-around;
-        position: sticky;
-        top: 0;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        background: white; padding: 20px;
+        display: flex; justify-content: center; gap: 25px;
+        position: sticky; top: 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         z-index: 1000;
     }
 
     nav a {
-        text-decoration: none;
-        color: #333;
-        font-weight: bold;
-        font-size: 14px;
+        text-decoration: none; color: var(--primary);
+        font-weight: 600; font-size: 15px; text-transform: uppercase;
+        transition: 0.3s;
     }
+
+    nav a:hover { color: var(--accent); }
 
     header {
-        background: var(--primary);
-        color: white;
-        padding: 40px 20px;
-        text-align: center;
+        background: linear-gradient(135deg, #0984e3, #6c5ce7);
+        color: white; padding: 60px 20px; text-align: center;
     }
 
-    .container {
-        max-width: 800px;
-        margin: auto;
-    }
+    .container { max-width: 900px; margin: auto; padding-bottom: 50px; }
 
     section {
-        display: none; /* Hide all sections initially */
-        background: white;
-        margin: 20px;
-        padding: 25px;
-        border-radius: 15px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        display: none; background: white; margin: 30px 20px;
+        padding: 35px; border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
     }
 
-    section.active {
-        display: block; /* Show only active section */
-    }
+    section.active { display: block; animation: fadeIn 0.5s; }
 
-    h2 { color: var(--primary); border-bottom: 2px solid var(--light); padding-bottom: 10px; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    h2 { color: var(--primary); font-size: 28px; margin-bottom: 20px; }
+
+    .input-group { margin-bottom: 15px; text-align: left; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
 
     input, select, button {
-        padding: 12px; margin: 10px 0; width: 100%;
-        border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box;
+        padding: 15px; width: 100%; border-radius: 12px;
+        border: 1px solid #ddd; box-sizing: border-box; font-size: 16px;
     }
 
     button {
-        background: var(--primary); color: white; border: none;
-        cursor: pointer; font-weight: bold; transition: 0.3s;
+        background: var(--accent); color: white; border: none;
+        cursor: pointer; font-weight: bold; margin-top: 10px;
     }
 
-    button:hover { background: var(--secondary); }
+    button:hover { background: #0773c5; transform: scale(1.01); }
 
     .card {
-        background: var(--light); padding: 15px;
-        margin: 10px 0; border-radius: 10px; border-left: 5px solid var(--primary);
+        background: #f1f2f6; padding: 20px; margin: 15px 0;
+        border-radius: 15px; border-left: 6px solid var(--accent);
     }
+
+    footer { text-align: center; padding: 20px; font-size: 12px; color: #636e72; }
 </style>
 </head>
 <body>
 
 <nav>
-    <a href="#" onclick="showSection('home')">🏠 Home</a>
-    <a href="#" onclick="showSection('age')">🦴 Age Calc</a>
-    <a href="#" onclick="showSection('diet')">🥩 Diet</a>
-    <a href="#" onclick="showSection('tools')">🛠️ Tools</a>
+    <a href="#" onclick="showSection('home')">Home</a>
+    <a href="#" onclick="showSection('calculator')">Calculators</a>
+    <a href="#" onclick="showSection('diet')">Diet Plans</a>
+    <a href="#" onclick="showSection('support')">Contact</a>
 </nav>
 
 <header>
-    <h1>🐶 Pet Care Hub Pro 🐱</h1>
-    <p>Everything your pet needs in one place</p>
+    <h1>PetCare Europe</h1>
+    <p>Premium Nutrition & Health Tools for your Pets</p>
 </header>
 
 <div class="container">
     <!-- Home Section -->
     <section id="home" class="active">
-        <h2>Welcome to Pet Care Hub</h2>
-        <p>Hamara maqsad aapke pets ki sehat aur khushi ka khayal rakhna hai. Upar diye gaye menu se mukhtalif tools istemal karein.</p>
+        <h2>Modern Pet Solutions</h2>
+        <p>Welcome to Europe's growing hub for pet health management. Use our smart tools to track your pet's biological age and nutritional requirements.</p>
         <div class="card">
-            <h3>Naya Tool: Water Intake!</h3>
-            <p>Humne naye tools section mein "Water Intake Calculator" add kar diya hai.</p>
+            <h3>Did you know?</h3>
+            <p>European standards suggest at least 30 minutes of active play for indoor cats daily.</p>
         </div>
     </section>
 
-    <!-- Age Calculator -->
-    <section id="age">
-        <h2>Pet Age Converter</h2>
-        <label>Select Pet</label>
-        <select id="petType">
-            <option value="dog">Dog</option>
-            <option value="cat">Cat</option>
-        </select>
-        <input type="number" id="petAge" placeholder="Enter pet age (years)">
-        <button onclick="calculateAge()">Convert to Human Years</button>
-        <h3 id="result" style="color: var(--secondary);"></h3>
-    </section>
-
-    <!-- Diet Plans -->
-    <section id="diet">
-        <h2>Expert Diet Plans</h2>
-        <div class="card">
-            <h3>🐕 Dog Plan</h3>
-            <p>High protein meals with fiber.</p>
-        </div>
-        <div class="card">
-            <h3>🐈 Cat Plan</h3>
-            <p>Taurine rich food with plenty of water.</p>
-        </div>
-    </section>
-
-    <!-- New Tools Section -->
-    <section id="tools">
-        <h2>Smart Pet Tools</h2>
+    <!-- Calculator Section -->
+    <section id="calculator">
+        <h2>Health Calculators</h2>
         
         <div class="card">
-            <h3>💧 Water Intake (Daily)</h3>
-            <input type="number" id="petWeight" placeholder="Pet weight in kg">
-            <button onclick="calcWater()">Calculate Water Needed</button>
-            <p id="waterResult" style="font-weight: bold;"></p>
+            <h3>Biological Age Converter</h3>
+            <div class="input-group">
+                <label>Select Species</label>
+                <select id="petType">
+                    <option value="dog">Dog (Canine)</option>
+                    <option value="cat">Cat (Feline)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Pet's Current Age</label>
+                <input type="number" id="petAge" placeholder="e.g. 3">
+            </div>
+            <button onclick="calculateAge()">Convert to Human Years</button>
+            <p id="result" style="color: var(--accent); font-weight: bold; margin-top: 15px;"></p>
         </div>
 
         <div class="card">
-            <h3>➕ Simple Math Tool</h3>
-            <input type="number" id="n1" placeholder="Number 1">
-            <input type="number" id="n2" placeholder="Number 2">
-            <button onclick="add()">Add</button>
-            <p id="mathRes"></p>
+            <h3>Hydration Tracker</h3>
+            <label>Pet Weight (kg)</label>
+            <input type="number" id="petWeight" placeholder="e.g. 10">
+            <button onclick="calcWater()">Calculate Daily Water Needed</button>
+            <p id="waterResult" style="font-weight: bold; margin-top: 15px;"></p>
         </div>
+    </section>
+
+    <!-- Diet Section -->
+    <section id="diet">
+        <h2>Nutritional Guidelines</h2>
+        <div class="card">
+            <h3>European Organic Diet (Dogs)</h3>
+            <p>Focus on high-quality proteins, healthy fats (Omega-3), and antioxidants found in fresh vegetables.</p>
+        </div>
+        <div class="card">
+            <h3>Premium Feline Nutrition (Cats)</h3>
+            <p>Emphasis on wet food rotation to prevent kidney issues, common in European household cats.</p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="support">
+        <h2>Get in Touch</h2>
+        <p>Need professional advice? Leave your email below.</p>
+        <input type="email" placeholder="Your Email Address">
+        <button onclick="alert('Thank you! We will contact you soon.')">Subscribe to Newsletter</button>
     </section>
 </div>
 
+<footer>
+    &copy; 2026 PetCare Europe Hub. All Rights Reserved.
+</footer>
+
 <script>
-    // Navigation Logic
     function showSection(id) {
-        let sections = document.querySelectorAll('section');
-        sections.forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
+        window.scrollTo(0,0);
     }
 
-    // Age Calc
     function calculateAge(){
         let pet = document.getElementById("petType").value;
         let age = document.getElementById("petAge").value;
-        let humanAge = (pet === "dog") ? age * 7 : age * 6;
-        document.getElementById("result").innerHTML = "Human equivalent: " + humanAge + " years";
-    }
-
-    // Water Intake Calc
-    function calcWater() {
-        let weight = document.getElementById("petWeight").value;
-        if(weight > 0) {
-            let ml = weight * 50; // Basic rule: 50ml per kg
-            document.getElementById("waterResult").innerHTML = "Your pet needs approx " + ml + "ml water daily.";
+        if(age > 0) {
+            let humanAge = (pet === "dog") ? age * 7 : age * 6;
+            document.getElementById("result").innerHTML = "Your pet is " + humanAge + " human years old.";
         }
     }
 
-    // Math
-    function add() {
-        let val = parseFloat(document.getElementById("n1").value) + parseFloat(document.getElementById("n2").value);
-        document.getElementById("mathRes").innerHTML = "Result: " + val;
+    function calcWater() {
+        let weight = document.getElementById("petWeight").value;
+        if(weight > 0) {
+            let ml = weight * 55; // Slightly higher European standard
+            document.getElementById("waterResult").innerHTML = "Daily target: " + ml + " ml";
+        }
     }
 </script>
 
 </body>
-            </html>
+                </html>
     
