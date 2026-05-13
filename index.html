@@ -4,95 +4,63 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pawlaxy0 | Premium European Pet Hub</title>
-
 <style>
     :root {
         --teal: #3a7d7e;
         --light-bg: #f4f7f6;
         --text: #2d3436;
         --white: #ffffff;
+        --accent: #e67e22;
+        --success: #27ae60;
     }
-
     body {
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         margin: 0; padding: 0; background: var(--white); color: var(--text);
-        overflow-x: hidden;
     }
-
     .top-nav {
         background: var(--teal); color: white;
         padding: 10px; text-align: center; font-size: 11px;
-        display: flex; justify-content: center; gap: 20px;
-        font-weight: bold; letter-spacing: 1px;
+        display: flex; justify-content: center; gap: 20px; font-weight: bold;
     }
-
-    .top-nav span { cursor: pointer; text-decoration: underline; transition: 0.3s; }
-
-    header {
-        padding: 20px; text-align: center; border-bottom: 1px solid #f0f0f0;
-    }
+    .top-nav span { cursor: pointer; text-decoration: underline; }
+    header { padding: 20px; text-align: center; border-bottom: 1px solid #f0f0f0; }
+    .logo { font-size: 32px; font-weight: 900; color: var(--teal); letter-spacing: 4px; text-transform: uppercase; }
     
-    .logo { 
-        font-size: 32px; font-weight: 900; color: var(--teal); 
-        letter-spacing: 4px; text-transform: uppercase;
-    }
-
-    .search-container {
-        padding: 15px 20px; display: flex; justify-content: center;
-    }
-    .search-container input {
-        width: 100%; max-width: 500px; padding: 14px; 
-        border: 1px solid #ddd; border-radius: 4px 0 0 4px; outline: none;
-    }
-    .search-container button {
-        background: var(--teal); color: white; border: none; 
-        padding: 0 20px; border-radius: 0 4px 4px 0; cursor: pointer;
-    }
-
     .grid-container {
         display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 15px;
         max-width: 900px; margin: auto;
     }
     .category-card {
-        position: relative; background: #eee; height: 220px; overflow: hidden;
+        position: relative; background: #eee; height: 180px; overflow: hidden;
         border-radius: 8px; display: flex; align-items: flex-end;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
-    .category-card img {
-        width: 100%; height: 100%; object-fit: cover; position: absolute; transition: 0.6s;
-    }
-
+    .category-card img { width: 100%; height: 100%; object-fit: cover; position: absolute; }
     .category-label {
         position: relative; z-index: 1; background: rgba(255,255,255,0.95);
-        width: 100%; text-align: center; padding: 12px; 
-        font-weight: bold; font-size: 13px;
+        width: 100%; text-align: center; padding: 10px; font-weight: bold; font-size: 12px;
     }
 
-    footer {
-        background: var(--teal); color: white; padding: 50px 30px; margin-top: 50px;
+    .tools-container {
+        max-width: 900px; margin: 30px auto; padding: 20px;
+        background: var(--light-bg); border-radius: 15px;
     }
-    .footer-content { max-width: 900px; margin: auto; }
-    .footer-section { margin-bottom: 35px; }
+    .tool-box {
+        background: white; padding: 20px; border-radius: 10px;
+        margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    h2.section-title { text-align: center; color: var(--teal); margin-bottom: 25px; }
+    input, select, button {
+        padding: 12px; width: 100%; border-radius: 5px;
+        border: 1px solid #ddd; margin-top: 10px; box-sizing: border-box;
+    }
+    button { background: var(--teal); color: white; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
+    button:hover { background: #2d6162; }
+    .result-text { margin-top: 15px; font-weight: bold; color: var(--accent); }
     
-    /* Removed white border-bottom lines as requested */
-    .footer-section h3 { 
-        font-size: 18px; 
-        padding-bottom: 5px; margin-bottom: 15px; text-transform: uppercase;
-    }
-
-    .footer-links { list-style: none; padding: 0; }
-    .footer-links li { margin: 10px 0; font-size: 14px; opacity: 0.8; }
-
-    .payment-icons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 25px; }
-    .pay-box { 
-        background: white; color: var(--teal); padding: 6px 12px; 
-        border-radius: 4px; font-weight: bold; font-size: 11px;
-    }
-
-    .copyright {
-        text-align: center; margin-top: 40px; font-size: 12px; opacity: 0.6;
-        padding-top: 20px;
-    }
+    footer { background: var(--teal); color: white; padding: 40px 30px; margin-top: 50px; }
+    .footer-content { max-width: 900px; margin: auto; }
+    .footer-section h3 { font-size: 18px; margin-bottom: 15px; text-transform: uppercase; }
+    .copyright { text-align: center; margin-top: 30px; font-size: 12px; opacity: 0.6; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; }
 </style>
 </head>
 <body>
@@ -107,114 +75,133 @@
     <div class="logo">PAWLAXY0</div>
 </header>
 
-<div class="search-container">
-    <input type="text" id="searchInput" placeholder="WHAT ARE YOU LOOKING FOR?">
-    <button>🔍</button>
-</div>
-
 <div class="grid-container">
-    <!-- Rabbit Section (Angora Giant style) -->
     <div class="category-card">
         <img src="https://images.unsplash.com/photo-1585110396054-c8112c91b55a?w=500" alt="Rabbit">
         <div class="category-label" id="small-label">ANGORA RABBITS GEAR</div>
     </div>
-    
-    <!-- Parrot Section -->
     <div class="category-card">
         <img src="https://images.unsplash.com/photo-1552728089-57bdde30fc3a?w=500" alt="Parrot">
         <div class="category-label" id="parrot-label">SMALL PARROT CARE</div>
     </div>
+</div>
 
-    <!-- Dogs Section -->
-    <div class="category-card">
-        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=500" alt="Dogs">
-        <div class="category-label" id="dog-label">DOG ACCESSORIES</div>
+<div class="tools-container">
+    <h2 class="section-title" id="tools-title">Pet Health Suite</h2>
+    
+    <!-- 1. Age Converter -->
+    <div class="tool-box">
+        <h3 id="tool-age">Age Converter</h3>
+        <select id="petType">
+            <option value="dog">Dog</option>
+            <option value="cat">Cat</option>
+            <option value="rabbit">Rabbit</option>
+        </select>
+        <input type="number" id="petAgeInput" placeholder="Age in years">
+        <button onclick="calcAge()" id="btn-age">Convert</button>
+        <p id="ageResult" class="result-text"></p>
     </div>
 
-    <!-- Health Section -->
-    <div class="category-card">
-        <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=500" alt="Health">
-        <div class="category-label" id="health-label">HEALTH & HYGIENE</div>
+    <!-- 2. Water Intake -->
+    <div class="tool-box">
+        <h3 id="tool-water">Daily Hydration</h3>
+        <input type="number" id="petWeight" placeholder="Pet Weight (kg)">
+        <button onclick="calcWater()" id="btn-water">Calculate ml</button>
+        <p id="waterResult" class="result-text"></p>
+    </div>
+
+    <!-- 3. Vaccine Reminder -->
+    <div class="tool-box">
+        <h3 id="tool-vac">Vaccine Reminder</h3>
+        <input type="text" id="vacName" placeholder="Vaccine Name (e.g. Rabies)">
+        <input type="date" id="vacDate">
+        <button onclick="setVac()" id="btn-vac">Set Reminder</button>
+        <p id="vacResult" class="result-text" style="color: var(--success);"></p>
+    </div>
+
+    <!-- 4. Weight Tracker -->
+    <div class="tool-box">
+        <h3 id="tool-weight">Weight Tracker</h3>
+        <input type="number" id="currentWeight" placeholder="Current Weight (kg)">
+        <button onclick="trackWeight()" id="btn-track">Log Weight</button>
+        <p id="weightMsg" class="result-text"></p>
     </div>
 </div>
 
-<footer>
-    <div class="footer-content">
-        <div class="footer-section">
-            <h3 id="footer-contact">CONTACT US</h3>
-            <p style="font-size: 14px; line-height: 1.6;">
-                Pawlaxy0 Europe Hub<br>
-                International Support Team<br>
-                Email: watersalf27@gmail.com<br>
-                Berlin, Germany
-            </p>
-        </div>
-
-        <div class="footer-section">
-            <h3 id="footer-info">INFORMATION</h3>
-            <ul class="footer-links">
-                !--  -->
 <footer>
     <div class="footer-content">
         <div class="footer-section">
             <h3 id="footer-contact">CONTACT & SUPPORT</h3>
             <p style="font-size: 14px; line-height: 1.6;">
-                Pawlaxy0 Europe Hub<br>
-                Email: watersalf27@gmail.com<br>
-                <br>
+                Email: watersalf27@gmail.com<br><br>
                 <strong>International Support:</strong><br>
-                Binance ID: []<br>
-                SadaPay: 
+                Binance ID: [ADD_UID_HERE]<br>
+                SadaPay: [ADD_NUMBER_HERE]
             </p>
         </div>
-
-        <div class="footer-section">
-            <h3 id="footer-info">INFORMATION</h3>
-            <ul style="list-style: none; padding: 0; font-size: 14px; opacity: 0.8; line-height: 2;">
-                <li>About Pawlaxy0</li>
-                <li>Terms of Service</li>
-                <li>Privacy Policy</li>
-            </ul>
-        </div>
-
-        <div class="copyright">
-            &copy; 2026 PAWLAXY0. All rights reserved.
-        </div>
-    
+        <div class="copyright">&copy; 2026 PAWLAXY0. All rights reserved.</div>
     </div>
 </footer>
 
 <script>
     const content = {
-        en: {
-            search: "WHAT ARE YOU LOOKING FOR?",
-            small: "ANGORA RABBITS GEAR", parrot: "SMALL PARROT CARE",
-            dog: "DOG ACCESSORIES", health: "HEALTH & HYGIENE",
-            contact: "CONTACT US", info: "INFORMATION"
+        en: { 
+            title: "Pet Health Suite", age: "Age Converter", water: "Daily Hydration", vac: "Vaccine Reminder", track: "Weight Tracker",
+            small: "ANGORA RABBITS GEAR", parrot: "SMALL PARROT CARE", contact: "CONTACT & SUPPORT"
         },
-        de: {
-            search: "WAS SUCHEN SIE?",
-            small: "ANGORA KANINCHEN", parrot: "SITTICH PFLEGE",
-            dog: "HUNDEZUBEHÖR", health: "GESUNDHEIT & PFLEGE",
-            contact: "KONTAKTIEREN SIE UNS", info: "INFORMATIONEN"
+        de: { 
+            title: "Tiergesundheits-Suite", age: "Altersrechner", water: "Hydratation", vac: "Impf-Erinnerung", track: "Gewichts-Tracker",
+            small: "ANGORA KANINCHEN", parrot: "SITTICH PFLEGE", contact: "KONTAKT & SUPPORT"
         },
-        fr: {
-            search: "QUE CHERCHEZ-VOUS?",
-            small: "LAPINS ANGORA", parrot: "SOINS PERRUCHE",
-            dog: "ACCESSOIRES CHIEN", health: "SANTÉ ET HYGIÈNE",
-            contact: "CONTACTEZ-NOUS", info: "INFORMATIONS"
+        fr: { 
+            title: "Suite Santé Animale", age: "Calculateur d'âge", water: "Hydratation", vac: "Rappel Vaccin", track: "Suivi de Poids",
+            small: "LAPINS ANGORA", parrot: "SOINS PERRUCHE", contact: "CONTACT & SUPPORT"
         }
     };
 
     function changeLang(lang) {
-        document.getElementById('searchInput').placeholder = content[lang].search;
+        document.getElementById('tools-title').innerText = content[lang].title;
+        document.getElementById('tool-age').innerText = content[lang].age;
+        document.getElementById('tool-water').innerText = content[lang].water;
+        document.getElementById('tool-vac').innerText = content[lang].vac;
+        document.getElementById('tool-weight').innerText = content[lang].track;
         document.getElementById('small-label').innerText = content[lang].small;
         document.getElementById('parrot-label').innerText = content[lang].parrot;
-        document.getElementById('dog-label').innerText = content[lang].dog;
-        document.getElementById('health-label').innerText = content[lang].health;
         document.getElementById('footer-contact').innerText = content[lang].contact;
-        document.getElementById('footer-info').innerText = content[lang].info;
+    }
+
+    function calcAge() {
+        let age = document.getElementById('petAgeInput').value;
+        let type = document.getElementById('petType').value;
+        if(age > 0) {
+            let res = (type === 'dog') ? age * 7 : (type === 'cat') ? age * 6 : age * 10;
+            document.getElementById('ageResult').innerText = "Human Years: " + res;
+        }
+    }
+
+    function calcWater() {
+        let weight = document.getElementById('petWeight').value;
+        if(weight > 0) {
+            document.getElementById('waterResult').innerText = "Target: " + (weight * 55) + " ml / day";
+        }
+    }
+
+    function setVac() {
+        let name = document.getElementById('vacName').value;
+        let date = document.getElementById('vacDate').value;
+        if(name && date) {
+            document.getElementById('vacResult').innerText = "Saved: " + name + " on " + date;
+            alert("Reminder Set Successfully!");
+        }
+    }
+
+    function trackWeight() {
+        let w = document.getElementById('currentWeight').value;
+        if(w > 0) {
+            document.getElementById('weightMsg').innerText = "Latest Log: " + w + " kg (Stay Healthy!)";
+        }
     }
 </script>
 </body>
-</html>
+    </html>
+    
