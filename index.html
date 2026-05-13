@@ -3,18 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Petster Europe | Professional Pet Shop</title>
+<title>Pawlaxy0 | Premium European Pet Hub</title>
 
 <style>
     :root {
         --teal: #3a7d7e;
         --light-bg: #f4f7f6;
         --text: #2d3436;
+        --white: #ffffff;
     }
 
     body {
         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        margin: 0; padding: 0; background: white; color: var(--text);
+        margin: 0; padding: 0; background: var(--white); color: var(--text);
+        overflow-x: hidden;
     }
 
     /* Top Language Bar */
@@ -22,131 +24,179 @@
         background: var(--teal); color: white;
         padding: 10px; text-align: center; font-size: 11px;
         display: flex; justify-content: center; gap: 20px;
-        font-weight: bold;
+        font-weight: bold; letter-spacing: 1px;
     }
 
-    .top-nav span { cursor: pointer; text-decoration: underline; }
+    .top-nav span { cursor: pointer; text-decoration: underline; transition: 0.3s; }
+    .top-nav span:hover { opacity: 0.7; }
 
-    /* Main Header */
+    /* Header & Logo */
     header {
-        padding: 15px; text-align: center; border-bottom: 1px solid #f0f0f0;
+        padding: 20px; text-align: center; border-bottom: 1px solid #f0f0f0;
     }
     
-    .logo { font-size: 28px; font-weight: 900; color: var(--teal); letter-spacing: 3px; }
+    .logo { 
+        font-size: 32px; font-weight: 900; color: var(--teal); 
+        letter-spacing: 4px; text-transform: uppercase;
+    }
 
+    /* Search Bar */
     .search-container {
-        padding: 10px 20px; display: flex; justify-content: center;
+        padding: 15px 20px; display: flex; justify-content: center;
     }
     .search-container input {
-        width: 100%; max-width: 500px; padding: 12px; border: 1px solid #ccc; border-radius: 4px 0 0 4px; outline: none;
+        width: 100%; max-width: 500px; padding: 14px; 
+        border: 1px solid #ddd; border-radius: 4px 0 0 4px; outline: none;
+        font-size: 14px;
     }
     .search-container button {
-        background: var(--teal); color: white; border: none; padding: 0 15px; border-radius: 0 4px 4px 0; cursor: pointer;
+        background: var(--teal); color: white; border: none; 
+        padding: 0 20px; border-radius: 0 4px 4px 0; cursor: pointer;
     }
 
-    /* Category Grid */
+    /* Category Grid Layout */
     .grid-container {
         display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 15px;
+        max-width: 900px; margin: auto;
     }
     .category-card {
-        position: relative; background: #eee; height: 200px; overflow: hidden;
-        border-radius: 5px; display: flex; align-items: flex-end;
+        position: relative; background: #eee; height: 220px; overflow: hidden;
+        border-radius: 8px; display: flex; align-items: flex-end;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
     .category-card img {
-        width: 100%; height: 100%; object-fit: cover; position: absolute; transition: 0.5s;
+        width: 100%; height: 100%; object-fit: cover; position: absolute; transition: 0.6s;
     }
-    .category-card:hover img { transform: scale(1.1); }
+    .category-card:hover img { transform: scale(1.08); }
 
     .category-label {
         position: relative; z-index: 1; background: rgba(255,255,255,0.95);
-        width: 100%; text-align: center; padding: 10px; font-weight: bold; font-size: 12px;
-        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        width: 100%; text-align: center; padding: 12px; 
+        font-weight: bold; font-size: 13px; letter-spacing: 0.5px;
     }
 
     /* Footer Section */
     footer {
-        background: var(--teal); color: white; padding: 40px 25px; margin-top: 40px;
+        background: var(--teal); color: white; padding: 50px 30px; margin-top: 50px;
     }
-    .footer-section { margin-bottom: 25px; }
-    .footer-section h3 { font-size: 16px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; margin-bottom: 15px; }
+    .footer-content { max-width: 900px; margin: auto; }
+    .footer-section { margin-bottom: 35px; }
+    .footer-section h3 { 
+        font-size: 18px; border-bottom: 1px solid rgba(255,255,255,0.2); 
+        padding-bottom: 12px; margin-bottom: 15px; text-transform: uppercase;
+    }
     .footer-links { list-style: none; padding: 0; }
-    .footer-links li { margin: 8px 0; font-size: 13px; opacity: 0.8; }
+    .footer-links li { margin: 10px 0; font-size: 14px; opacity: 0.8; cursor: pointer; }
+    .footer-links li:hover { opacity: 1; text-decoration: underline; }
 
-    .payment-icons { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
-    .pay-box { background: white; color: var(--teal); padding: 4px 8px; border-radius: 2px; font-weight: bold; font-size: 10px; }
+    /* Payment & Trust Icons */
+    .payment-icons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 25px; }
+    .pay-box { 
+        background: white; color: var(--teal); padding: 6px 12px; 
+        border-radius: 4px; font-weight: bold; font-size: 11px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
 
+    .copyright {
+        text-align: center; margin-top: 40px; font-size: 12px; opacity: 0.6;
+        border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;
+    }
+
+    /* Mobile Tweaks */
+    @media (max-width: 480px) {
+        .category-card { height: 180px; }
+        .logo { font-size: 26px; }
+    }
 </style>
 </head>
 <body>
 
+<!-- Language Switcher Bar -->
 <div class="top-nav">
     <span onclick="changeLang('en')">ENGLISH</span>
     <span onclick="changeLang('de')">DEUTSCH</span>
     <span onclick="changeLang('fr')">FRANÇAIS</span>
 </div>
 
+<!-- Header with Brand Name -->
 <header>
-    <div class="logo">PETSTER</div>
+    <div class="logo">PAWLAXY0</div>
 </header>
 
+<!-- Search Component -->
 <div class="search-container">
     <input type="text" id="searchInput" placeholder="WHAT ARE YOU LOOKING FOR?">
     <button>🔍</button>
 </div>
 
-<!-- Category Grid -->
+<!-- Main Categories Grid -->
 <div class="grid-container">
     <!-- Cats Section -->
     <div class="category-card">
-        <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400" alt="Cats">
+        <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=500" alt="Cats">
         <div class="category-label" id="cat-label">CAT ACCESSORIES</div>
     </div>
     
     <!-- Dogs Section -->
     <div class="category-card">
-        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400" alt="Dogs">
+        <img src="https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=500" alt="Dogs">
         <div class="category-label" id="dog-label">DOG ACCESSORIES</div>
     </div>
 
-    <!-- Small Pets (Instead of Horse) -->
+    <!-- Small Pets Section -->
     <div class="category-card">
-        <img src="https://images.unsplash.com/photo-1585110396054-c8112c91b55a?w=400" alt="Small Pets">
+        <img src="https://images.unsplash.com/photo-1585110396054-c8112c91b55a?w=500" alt="Small Pets">
         <div class="category-label" id="small-label">SMALL PETS GEAR</div>
     </div>
 
-    <!-- Health & Care -->
+    <!-- Health Section -->
     <div class="category-card">
-        <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=400" alt="Health">
+        <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=500" alt="Health">
         <div class="category-label" id="health-label">HEALTH & HYGIENE</div>
     </div>
 </div>
 
+<!-- Footer Area -->
 <footer>
-    <div class="footer-section">
-        <h3 id="footer-contact">CONTACT US</h3>
-        <p style="font-size: 13px;">Petster Europe Hub<br>International Support Team<br>contact@petster.eu</p>
-    </div>
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3 id="footer-contact">CONTACT US</h3>
+            <p style="font-size: 14px; line-height: 1.6;">
+                Pawlaxy0 Europe Hub<br>
+                International Support Team<br>
+                Email: support@pawlaxy0.eu<br>
+                Berlin, Germany
+            </p>
+        </div>
 
-    <div class="footer-section">
-        <h3 id="footer-info">INFORMATION</h3>
-        <ul class="footer-links">
-            <li>About Us</li>
-            <li>Shipping Policy</li>
-            <li>Returns & Exchanges</li>
-            <li>Terms & Conditions</li>
-        </ul>
-    </div>
+        <div class="footer-section">
+            <h3 id="footer-info">INFORMATION</h3>
+            <ul class="footer-links">
+                <li>About Pawlaxy0</li>
+                <li>Shipping & Delivery</li>
+                <li>Returns & Exchanges</li>
+                <li>Terms of Service</li>
+                <li>Privacy Policy</li>
+            </ul>
+        </div>
 
-    <div class="payment-icons">
-        <div class="pay-box">VISA</div>
-        <div class="pay-box">PAYPAL</div>
-        <div class="pay-box">KLARNA</div>
-        <div class="pay-box">MASTERCARD</div>
-        <div class="pay-box">APPLE PAY</div>
+        <div class="payment-icons">
+            <div class="pay-box">VISA</div>
+            <div class="pay-box">PAYPAL</div>
+            <div class="pay-box">KLARNA</div>
+            <div class="pay-box">MASTERCARD</div>
+            <div class="pay-box">APPLE PAY</div>
+            <div class="pay-box">GPAY</div>
+        </div>
+
+        <div class="copyright">
+            &copy; 2026 PAWLAXY0. All rights reserved. Premium Pet Care Solutions.
+        </div>
     </div>
 </footer>
 
 <script>
+    // Language Data Object
     const content = {
         en: {
             search: "WHAT ARE YOU LOOKING FOR?",
@@ -157,7 +207,7 @@
         de: {
             search: "WAS SUCHEN SIE?",
             cat: "KATZENZUBEHÖR", dog: "HUNDEZUBEHÖR",
-            small: "KLEINTIERBEDARF", health: "GESUNDHEIT & HYGIENE",
+            small: "KLEINTIERBEDARF", health: "GESUNDHEIT & PFLEGE",
             contact: "KONTAKTIEREN SIE UNS", info: "INFORMATIONEN"
         },
         fr: {
@@ -168,6 +218,7 @@
         }
     };
 
+    // Language Switcher Function
     function changeLang(lang) {
         document.getElementById('searchInput').placeholder = content[lang].search;
         document.getElementById('cat-label').innerText = content[lang].cat;
@@ -176,9 +227,12 @@
         document.getElementById('health-label').innerText = content[lang].health;
         document.getElementById('footer-contact').innerText = content[lang].contact;
         document.getElementById('footer-info').innerText = content[lang].info;
+        
+        // Visual Feedback
+        console.log("Language changed to: " + lang);
     }
 </script>
 
 </body>
-    </html>
-            
+            </html>
+    
