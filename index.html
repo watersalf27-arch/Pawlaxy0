@@ -45,14 +45,16 @@
         background: var(--light-bg); border-radius: 15px;
     }
     .tool-box {
-        background: white; padding: 20px; border-radius: 10px;
+        background: white; padding: 0; border-radius: 10px;
         margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         overflow: hidden;
     }
-    .tool-box img { width: 100%; height: 250px; object-fit: cover; }
+    .tool-box img { width: 100%; height: 250px; object-fit: cover; display: block; }
     .article-content { padding: 20px; line-height: 1.7; }
     
     h2.section-title { text-align: center; color: var(--teal); margin-bottom: 25px; margin-top: 40px; text-transform: uppercase; letter-spacing: 2px; }
+    
+    .input-box { padding: 20px; }
     input, select, button {
         padding: 12px; width: 100%; border-radius: 5px;
         border: 1px solid #ddd; margin-top: 10px; box-sizing: border-box;
@@ -79,10 +81,9 @@
     <div class="logo">PAWLAXY0</div>
 </header>
 
-<!-- Main Images Section -->
 <div class="grid-container">
     <div class="category-card">
-        <img src="https://images.pexels.com/photos/4588435/pexels-photo-4588435.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Rabbit">
+        <img src="https://images.pexels.com/photos/4001296/pexels-photo-4001296.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Angora Rabbit">
         <div class="category-label" id="small-label">ANGORA RABBITS GEAR</div>
     </div>
     <div class="category-card">
@@ -93,56 +94,58 @@
 
 <div class="tools-container">
     
-    <!-- PET KNOWLEDGE HUB (BLOG SECTION) -->
     <h2 class="section-title">Pet Knowledge Hub</h2>
 
-    <!-- Article 1: Scottish Fold -->
+    <!-- Scottish Fold -->
     <article class="tool-box">
         <img src="https://images.pexels.com/photos/156934/pexels-photo-156934.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Scottish Fold">
         <div class="article-content">
             <h3 style="color: var(--teal);">1. The Scottish Fold: Ear Mutation</h3>
-            <p>Scottish Folds are famous for their unique "folded" ears. This is a dominant genetic mutation affecting the cartilage throughout the body. <strong>Care Tip:</strong> Clean their ears weekly as the fold can trap wax easily.</p>
+            <p>Scottish Folds are famous for their unique folded ears. This is a genetic mutation affecting cartilage. <strong>Care:</strong> Clean their ears weekly to avoid wax buildup.</p>
         </div>
     </article>
 
-    <!-- Article 2: Sphynx -->
+    <!-- Sphynx -->
     <article class="tool-box">
         <img src="https://images.pexels.com/photos/991831/pexels-photo-991831.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Sphynx Cat">
         <div class="article-content">
             <h3 style="color: var(--teal);">2. The Sphynx: Hairless Mutation</h3>
-            <p>The Sphynx is a breed known for its lack of a coat. This mutation is a natural genetic occurrence. <strong>Key Fact:</strong> Because they have no fur to absorb skin oils, Sphynx cats require regular bathing and protection from sunburn.</p>
+            <p>The Sphynx is naturally hairless due to a genetic occurrence. <strong>Key Fact:</strong> They need regular baths to remove oils and sunscreen in the summer.</p>
         </div>
     </article>
 
-    <!-- Article 3: Munchkin -->
+    <!-- Munchkin -->
     <article class="tool-box">
         <img src="https://images.pexels.com/photos/3335607/pexels-photo-3335607.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Munchkin Cat">
         <div class="article-content">
             <h3 style="color: var(--teal);">3. The Munchkin: Short-Leg Mutation</h3>
-            <p>Munchkin cats are defined by very short legs caused by a genetic mutation called achondroplasia. Despite their legs, they are very active and can run and jump quite well. <strong>Health:</strong> They need a strict diet to avoid obesity, which can strain their spine.</p>
+            <p>Munchkins have very short legs caused by achondroplasia. They are energetic and playful. <strong>Health:</strong> Maintain a healthy weight to protect their spine.</p>
         </div>
     </article>
 
-    <!-- PET HEALTH SUITE (TOOLS SECTION) -->
     <h2 class="section-title" id="tools-title">Pet Health Suite</h2>
     
-    <div class="tool-box" style="padding: 20px;">
-        <h3 id="tool-age">Age Converter</h3>
-        <select id="petType">
-            <option value="dog">Dog</option>
-            <option value="cat">Cat</option>
-            <option value="rabbit">Rabbit</option>
-        </select>
-        <input type="number" id="petAgeInput" placeholder="Age in years">
-        <button onclick="calcAge()" id="btn-age">Convert</button>
-        <p id="ageResult" class="result-text"></p>
+    <div class="tool-box">
+        <div class="input-box">
+            <h3 id="tool-age">Age Converter</h3>
+            <select id="petType">
+                <option value="dog">Dog</option>
+                <option value="cat">Cat</option>
+                <option value="rabbit">Rabbit</option>
+            </select>
+            <input type="number" id="petAgeInput" placeholder="Age in years">
+            <button onclick="calcAge()" id="btn-age">Convert</button>
+            <p id="ageResult" class="result-text"></p>
+        </div>
     </div>
 
-    <div class="tool-box" style="padding: 20px;">
-        <h3 id="tool-water">Daily Hydration</h3>
-        <input type="number" id="petWeight" placeholder="Pet Weight (kg)">
-        <button onclick="calcWater()" id="btn-water">Calculate ml</button>
-        <p id="waterResult" class="result-text"></p>
+    <div class="tool-box">
+        <div class="input-box">
+            <h3 id="tool-water">Daily Hydration</h3>
+            <input type="number" id="petWeight" placeholder="Pet Weight (kg)">
+            <button onclick="calcWater()" id="btn-water">Calculate ml</button>
+            <p id="waterResult" class="result-text"></p>
+        </div>
     </div>
 
 </div>
@@ -154,8 +157,8 @@
             <p style="font-size: 14px; line-height: 1.6;">
                 Email: watersalf27@gmail.com<br><br>
                 <strong>International Support:</strong><br>
-                Binance ID: [Aapka UID]<br>
-                SadaPay: [Aapka Number]
+                Binance ID: [ADD_UID_HERE]<br>
+                SadaPay: [ADD_NUMBER_HERE]
             </p>
         </div>
         <div class="copyright">&copy; 2026 PAWLAXY0. All rights reserved.</div>
