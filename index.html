@@ -3,477 +3,387 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Pets Vibe | Premium Pet Care & Shopping</title>
+    <title>DailyKitBox - Free Online Utility Tools</title>
+    <!-- jsPDF Library for JPG to PDF Conversion -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
-            --primary: #3a7d7e; 
-            --secondary: #e67e22;
-            --bg-light: #f4f7f6;
-            --text-dark: #2d3436;
-            --sidebar-bg: #8b3a1a; 
-            --white: #ffffff;
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            margin: 0; padding: 0; background-color: var(--white);
-            color: var(--text-dark); line-height: 1.6;
-        }
-
-        /* Top Bar */
-        .top-nav {
-            background: var(--primary);
-            color: white;
-            padding: 15px 25px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .menu-trigger {
-            font-size: 26px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo-brand {
-            font-weight: 900;
-            font-size: 22px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        /* Sidebar Overlay (Screenshot Inspired) */
-        .sidebar {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            z-index: 2001;
-            top: 0;
-            left: 0;
-            background-color: var(--sidebar-bg);
-            overflow-x: hidden;
-            transition: 0.5s ease;
-            padding-top: 50px;
-            box-shadow: 5px 0 15px rgba(0,0,0,0.3);
-        }
-
-        .sidebar-header {
-            color: white;
-            font-size: 24px;
-            padding: 0 32px 20px;
-            font-weight: bold;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 10px;
-        }
-
-        .sidebar a {
-            padding: 15px 32px;
-            text-decoration: none;
-            font-size: 18px;
-            color: #ecf0f1;
-            display: block;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            transition: 0.3s;
-        }
-
-        .sidebar a:hover {
-            background-color: rgba(255,255,255,0.1);
-            padding-left: 45px;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 25px;
-            font-size: 36px;
-            color: white;
-            cursor: pointer;
-        }
-
-        /* Main Layout */
-        .wrapper { max-width: 1100px; margin: auto; padding: 20px; }
-
-        /* Affiliate Section */
-        .shop-header {
-            text-align: center;
-            color: var(--primary);
-            margin: 40px 0 20px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .affiliate-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-bottom: 50px;
-        }
-
-        .product-card {
-            border: 1px solid #eee;
-            border-radius: 15px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             padding: 20px;
-            text-align: center;
-            transition: 0.3s;
-            background: #fff;
         }
 
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-        .product-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: contain;
+        header h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: #6b7280;
+        }
+
+        /* Tabs Navigation */
+        .tabs-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background-color: #e5e7eb;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Tools Container */
+        .tool-content {
+            display: none;
+            background: var(--card-bg);
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .tool-content.active {
+            display: block;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #f3f4f6;
+            padding-bottom: 10px;
+        }
+
+        /* Form Elements */
+        .input-group {
             margin-bottom: 15px;
         }
 
-        .price-tag { font-size: 20px; font-weight: bold; color: var(--secondary); margin: 10px 0; }
-
-        .btn-affiliate {
+        label {
             display: block;
-            padding: 12px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            margin-top: 10px;
-            transition: 0.3s;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 0.95rem;
         }
 
-        .btn-amazon { background: #FF9900; color: #000; }
-        .btn-walmart { background: #0071DC; color: #fff; }
-
-        /* Tools Section */
-        .tool-container {
-            background: var(--bg-light);
-            padding: 30px;
-            border-radius: 20px;
-            margin: 40px 0;
-            border-left: 8px solid var(--primary);
-        }
-
-        .tool-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        input, select, .btn-calc {
+        input[type="number"], input[type="file"], textarea, select {
             width: 100%;
-            padding: 15px;
-            margin-top: 10px;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-            box-sizing: border-box;
-            font-size: 16px;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
         }
 
-        .btn-calc {
-            background: var(--primary);
+        input:focus, textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        button.action-btn {
+            width: 100%;
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            font-weight: bold;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
             cursor: pointer;
+            margin-top: 10px;
         }
 
-        /* 30 Articles Section */
-        .article-section { margin-top: 60px; }
-        .post-card {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            margin-bottom: 40px;
-            border: 1px solid #f0f0f0;
+        button.action-btn:hover {
+            background-color: var(--primary-hover);
         }
 
-        .post-content { padding: 30px; }
-        .post-content h3 { color: var(--primary); margin-top: 0; font-size: 24px; }
-        .post-content p { color: #555; line-height: 1.8; }
-        .post-image { width: 100%; height: 400px; object-fit: cover; }
+        /* Results Box */
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9fafb;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 4px;
+        }
 
-        footer {
-            background: var(--primary);
-            color: white;
-            padding: 60px 20px;
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .bold-text {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* Word Counter Custom */
+        .counter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .counter-card {
+            background: #f3f4f6;
+            padding: 15px;
             text-align: center;
-            margin-top: 80px;
+            border-radius: 6px;
         }
-
-        @media (max-width: 768px) {
-            .tool-grid { grid-template-columns: 1fr; }
-            .post-image { height: 250px; }
+        .counter-num {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
         }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar Overlay Menu -->
-    <div id="sideNav" class="sidebar">
-        <span class="close-btn" onclick="toggleNav(0)">&times;</span>
-        <div class="sidebar-header">MENU</div>
-        <a href="#">➜ LOG IN</a>
-        <a href="#">✚ REGISTER</a>
-        <a href="#articles">📄 PET ARTICLES ⌄</a>
-        <a href="#shop">🛒 SHOP SUPPLIES</a>
-        <a href="#tools">🩺 HEALTH TOOLS</a>
-        <a href="#">💬 FORUMS ⌄</a>
-        <a href="#">👥 MEMBERS ⌄</a>
-        <a href="#">✉ CONTACT US</a>
-        <a href="#" onclick="toggleNav(0)">✖ CLOSE MENU</a>
+    <header>
+        <h1>DailyKitBox</h1>
+        <p>Your Daily Essential Online Micro-Tools Suite</p>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs-nav">
+        <button class="tab-btn active" onclick="switchTab('jpg-to-pdf')">JPG to PDF</button>
+        <button class="tab-btn" onclick="switchTab('mortgage-calc')">Mortgage Calculator</button>
+        <button class="tab-btn" onclick="switchTab('tip-calc')">Tip Calculator</button>
+        <button class="tab-btn" onclick="switchTab('word-counter')">Word Counter</button>
     </div>
 
-    <!-- Sticky Top Nav -->
-    <div class="top-nav">
-        <div class="menu-trigger" onclick="toggleNav(280)">
-            <span>☰</span> <span class="logo-brand">Daily Pets Vibe</span>
+    <!-- 1. JPG TO PDF TOOL -->
+    <div id="jpg-to-pdf" class="tool-content active">
+        <h2>JPG to PDF Converter</h2>
+        <div class="input-group">
+            <label>Select JPG Images:</label>
+            <input type="file" id="imageInput" accept="image/jpeg, image/jpg" multiple>
         </div>
-        <div style="font-size: 14px;">1 June Launch 🚀</div>
+        <button class="action-btn" onclick="convertToPDF()">Convert & Download PDF</button>
     </div>
 
-    <div class="wrapper">
+    <!-- 2. MORTGAGE CALCULATOR TOOL -->
+    <div id="mortgage-calc" class="tool-content">
+        <h2>Mortgage Calculator</h2>
+        <div class="input-group">
+            <label>Home Price ($):</label>
+            <input type="number" id="homePrice" value="300000">
+        </div>
+        <div class="input-group">
+            <label>Down Payment ($):</label>
+            <input type="number" id="downPayment" value="60000">
+        </div>
+        <div class="input-group">
+            <label>Loan Term (Years):</label>
+            <select id="loanTerm">
+                <option value="30">30 Years</option>
+                <option value="20">20 Years</option>
+                <option value="15">15 Years</option>
+                <option value="10">10 Years</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label>Interest Rate (%):</label>
+            <input type="number" id="interestRate" value="6.5" step="0.01">
+        </div>
+        <button class="action-btn" onclick="calculateMortgage()">Calculate Payment</button>
         
-        <!-- Health Tools Section -->
-        <section id="tools" class="tool-container">
-            <h2 style="color:var(--primary); margin-top:0;">Pet Analytics Suite</h2>
-            <div class="tool-grid">
-                <div class="tool-item">
-                    <label>Age Converter (Human Years)</label>
-                    <input type="number" id="ageInput" placeholder="Enter Pet's Age">
-                    <button class="btn-calc" onclick="calculateAge()">Convert Now</button>
-                    <p id="ageOutput" style="font-weight:bold; color:var(--secondary);"></p>
-                </div>
-                <div class="tool-item">
-                    <label>Water Intake (Daily ML)</label>
-                    <input type="number" id="weightInput" placeholder="Pet Weight in KG">
-                    <button class="btn-calc" onclick="calculateWater()">Check Hydration</button>
-                    <p id="waterOutput" style="font-weight:bold; color:var(--secondary);"></p>
-                </div>
-            </div>
-        </section>
+        <div class="result-box" id="mortgageResult" style="display:none;">
+            <div class="result-item"><span>Loan Amount:</span> <span id="resLoanAmount" class="bold-text">$0.00</span></div>
+            <div class="result-item"><span>Monthly Payment (P&I):</span> <span id="resMonthlyPayment" class="bold-text">$0.00</span></div>
+        </div>
+    </div>
 
-        <!-- Affiliate / Shopping Section -->
-        <h2 id="shop" class="shop-header">Recommended Pet Gear</h2>
-        <div class="affiliate-grid">
-            <!-- Product 1 -->
-            <div class="product-card">
-                <img src="https://images.pexels.com/photos/7722661/pexels-photo-7722661.jpeg" alt="Dog Bed">
-                <h3>Orthopedic Pet Bed</h3>
-                <p>Perfect for senior dogs and joint support.</p>
-                <div class="price-tag">$45.99</div>
-                <a href="https://amazon.com/your-link" class="btn-affiliate btn-amazon" target="_blank">Buy on Amazon</a>
+    <!-- 3. TIP CALCULATOR TOOL -->
+    <div id="tip-calc" class="tool-content">
+        <h2>Tip Calculator</h2>
+        <div class="input-group">
+            <label>Bill Amount ($):</label>
+            <input type="number" id="billAmount" placeholder="e.g. 50.00" step="0.01">
+        </div>
+        <div class="input-group">
+            <label>Tip Percentage (%):</label>
+            <select id="tipPercentage">
+                <option value="15">15% (Standard)</option>
+                <option value="18">18% (Good)</option>
+                <option value="20" selected>20% (Great)</option>
+                <option value="25">25% (Excellent)</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label>Number of People:</label>
+            <input type="number" id="numPeople" value="1" min="1">
+        </div>
+        <button class="action-btn" onclick="calculateTip()">Calculate Tip</button>
+
+        <div class="result-box" id="tipResult" style="display:none;">
+            <div class="result-item"><span>Total Tip:</span> <span id="resTotalTip">$0.00</span></div>
+            <div class="result-item"><span>Total Bill (with Tip):</span> <span id="resTotalBill">$0.00</span></div>
+            <div class="result-item"><span>Per Person Share:</span> <span id="resPerPerson" class="bold-text">$0.00</span></div>
+        </div>
+    </div>
+
+    <!-- 4. WORD COUNTER TOOL -->
+    <div id="word-counter" class="tool-content">
+        <h2>Word Counter</h2>
+        <div class="input-group">
+            <label>Paste or Type Your Text Below:</label>
+            <textarea id="textInput" rows="10" placeholder="Start typing here..." oninput="countText()"></textarea>
+        </div>
+        <div class="counter-grid">
+            <div class="counter-card">
+                <div class="counter-num" id="wordCount">0</div>
+                <div>Words</div>
             </div>
-            <!-- Product 2 -->
-            <div class="product-card">
-                <img src="https://images.pexels.com/photos/5745219/pexels-photo-5745219.jpeg" alt="Cat Tree">
-                <h3>Multi-Level Cat Tree</h3>
-                <p>Interactive playground for indoor cats.</p>
-                <div class="price-tag">$89.00</div>
-                <a href="https://walmart.com/your-link" class="btn-affiliate btn-walmart" target="_blank">Buy on Walmart</a>
-            </div>
-            <!-- Product 3 -->
-            <div class="product-card">
-                <img src="https://images.pexels.com/photos/59523/pexels-photo-59523.jpeg" alt="Bird Cage">
-                <h3>Large Flight Bird Cage</h3>
-                <p>Spacious design for finches and parrots.</p>
-                <div class="price-tag">$120.00</div>
-                <a href="https://amazon.com/your-link" class="btn-affiliate btn-amazon" target="_blank">View Deal</a>
+            <div class="counter-card">
+                <div class="counter-num" id="charCount">0</div>
+                <div>Characters</div>
             </div>
         </div>
+    </div>
 
-        <!-- 30 Articles Section -->
-        <section id="articles" class="article-section">
-            <h2 class="shop-header">The Ultimate Care Library</h2>
+    <script>
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tool-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
 
-            <!-- Article 1 -->
-            <div class="post-card">
-                <img src="https://images.pexels.com/photos/156934/pexels-photo-156934.jpeg" class="post-image" alt="Scottish Fold">
-                <div class="post-content">
-                    <h3>1. Scottish Fold: Managing Ear Health</h3>
-                    <p>The Scottish Fold is famous for its folded ears, caused by a genetic mutation. However, this beauty requires responsibility. Owners must clean their ears weekly using vet-approved solutions to prevent wax buildup and mites. Lack of care can lead to chronic infections due to reduced airflow in the ear canal.</p>
-                </div>
-            </div>
-
-            <!-- Article 2 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>2. Munchkin Cats: Mobility and Spinal Care</h3>
-                    <p>Munchkin cats are defined by their short legs, a result of natural genetic selection. While they are active and playful, their unique physiology means they are prone to lordosis and scoliosis. Maintaining a lean weight is crucial; extra pounds put immense pressure on their shorter limbs and spine.</p>
-                </div>
-            </div>
-
-            <!-- Article 3 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>3. Indoor Cat Enrichment Strategies</h3>
-                    <p>Living indoors protects cats from many dangers, but it can lead to boredom. Use vertical spaces like cat trees and interactive "puzzle feeders" to stimulate their hunting instincts. A bored cat is often a stressed cat.</p>
-                </div>
-            </div>
-
-            <!-- Article 4 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>4. The Science of Feline Hydration</h3>
-                    <p>Cats have a low thirst drive. In the wild, they get moisture from prey. For domestic cats, using a water fountain is essential because running water is more appealing to them than standing water in a bowl.</p>
-                </div>
-            </div>
-
-            <!-- Article 5 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>5. Recognizing Silent Stress in Cats</h3>
-                    <p>Cats are masters at hiding pain and stress. If your cat starts over-grooming, hiding more than usual, or urinating outside the litter box, these are often cries for help regarding their mental or physical health.</p>
-                </div>
-            </div>
-
-            <!-- Article 6 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>6. Persian Cat: The Art of Grooming</h3>
-                    <p>The long, luxurious coat of a Persian requires daily commitment. Without brushing, their fur quickly develops mats that can pull on the skin and cause infections. Professional grooming every few months is recommended.</p>
-                </div>
-            </div>
-
-            <!-- Article 7 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>7. Senior Cat Nutrition Guide</h3>
-                    <p>As cats cross the 10-year mark, their metabolism slows down. They need highly digestible proteins and supplements like Omega-3 to support joint health and kidney function, which are common issues in aging felines.</p>
-                </div>
-            </div>
-
-            <!-- Article 8 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>8. Kitten Socialization: The Golden Window</h3>
-                    <p>The first 12 weeks of a kitten's life define its personality. Exposing them to different sounds, smells, and gentle handling ensures they grow into confident, friendly adults who aren't afraid of visitors.</p>
-                </div>
-            </div>
-
-            <!-- Article 9 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>9. Decoding Cat Vocalizations</h3>
-                    <p>A "meow" is almost exclusively used to communicate with humans. High-pitched chirps usually mean excitement, while a low growl or hiss is a clear warning to stay back. Understanding this language prevents bites.</p>
-                </div>
-            </div>
-
-            <!-- Article 10 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>10. Taurine: The Essential Cat Amino Acid</h3>
-                    <p>Unlike dogs, cats cannot produce taurine. It must be in their diet. A taurine deficiency leads to dilated cardiomyopathy (heart failure) and blindness. Always ensure your cat food is AAFCO certified.</p>
-                </div>
-            </div>
-
-            <!-- Article 11 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>11. German Shepherd: Mental Stimulation</h3>
-                    <p>German Shepherds are "working" dogs. Without a job or mental puzzles, they can become destructive. 30 minutes of scent work or advanced command training is just as important as a long walk.</p>
-                </div>
-            </div>
-
-            <!-- Article 12 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>12. Puppy Teething and Oral Relief</h3>
-                    <p>Puppies lose their milk teeth between 4-6 months. To prevent them from chewing your furniture, provide chilled rubber toys or frozen carrots which numb the gums and provide safe relief.</p>
-                </div>
-            </div>
-
-            <!-- Article 13 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>13. Labrador Weight Management</h3>
-                    <p>Labradors are prone to obesity because they lack a "fullness" gene. Use slow-feeder bowls and replace high-calorie treats with green beans to keep them at a healthy weight and protect their joints.</p>
-                </div>
-            </div>
-
-            <!-- Article 14 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>14. Brachycephalic Syndrome in Dogs</h3>
-                    <p>Breeds like Pugs and Bulldogs have shortened airways. They cannot cool themselves efficiently through panting. Never exercise them in humidity or high heat, as they can suffer heatstroke in minutes.</p>
-                </div>
-            </div>
-
-            <!-- Article 15 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>15. Solving Separation Anxiety</h3>
-                    <p>Dogs are pack animals. To help them stay calm while you're away, practice short departures and provide "long-lasting" treats like stuffed Kongs to create a positive association with being alone.</p>
-                </div>
-            </div>
-
-            <!-- Article 16 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>16. Canine Dental Health Hygiene</h3>
-                    <p>Periodontal disease can lead to heart and kidney issues in dogs. Brushing your dog's teeth twice a week with pet-safe toothpaste is the single most effective way to extend their lifespan.</p>
-                </div>
-            </div>
-
-            <!-- Article 17 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>17. The Mystery of the Double Coat</h3>
-                    <p>Huskies and Golden Retrievers have a double coat that acts as insulation against both heat and cold. Shaving them ruins this natural system and makes them more likely to overheat and get sunburned.</p>
-                </div>
-            </div>
-
-            <!-- Article 18 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>18. Toxic Foods: The Red List</h3>
-                    <p>Common household items like Xylitol (sugar-free gum), grapes, raisins, and macadamia nuts are deadly to dogs. Even a small amount can cause sudden liver failure or neurological issues.</p>
-                </div>
-            </div>
-
-            <!-- Article 19 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>19. Positive Reinforcement Training</h3>
-                    <p>Dominance theory is outdated. Rewarding good behavior with treats and praise creates a dog that wants to listen because it's fun, rather than a dog that obeys out of fear.</p>
-                </div>
-            </div>
-
-            <!-- Article 20 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>20. Preventing Fleas and Ticks</h3>
-                    <p>Fleas can lay 50 eggs a day. Use a monthly preventative year-round. Ticks carry Lyme disease, so always check your dog's paws and ears after a walk in the woods or tall grass.</p>
-                </div>
-            </div>
-
-            <!-- Article 21 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>21. Angora Rabbit Wool Management</h3>
-                    <p>Angora rabbits grow fur continuously. If not groomed daily, they can develop "wool block," where they ingest fur that blocks their digestive tract.</p>
-                </div>
-            </div>
-
-            <!-- Article 22 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>22. The Importance of Timothy Hay</h3>
-                    <p>Rabbits are hindgut fermenters. They need constant fiber to keep their gut moving. Timothy hay should make up 80% of their diet.</p>
-                </div>
-            </div>
-
-            <!-- Article 23 -->
-            <div class="post-card">
-                <div class="post-content">
-                    <h3>23. Litter Training Your Bunny</h3>
-                    <p>Rabbits are naturally clean and usually pick one corner for their business. Put a litter box in that corner and fill it with paper-based bedding.</p>
-                </div>
-            </div>
-
+        // 1. JPG to PDF Logic
+        async function convertToPDF() {
+            const { jsPDF } = window.jspdf;
+            const fileInput = document.getElementById('imageInput');
             
+            if (fileInput.files.length === 0) {
+                alert('Please select at least one JPG image.');
+                return;
+            }
+
+            const pdf = new jsPDF();
+            
+            for (let i = 0; i < fileInput.files.length; i++) {
+                const file = fileInput.files[i];
+                const fileData = await readFileAsDataURL(file);
+                
+                if (i > 0) pdf.addPage();
+                
+                // Adding image to fit full page roughly
+                pdf.addImage(fileData, 'JPEG', 10, 10, 190, 0);
+            }
+            
+            pdf.save('DailyKitBox-converted.pdf');
+        }
+
+        function readFileAsDataURL(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (end) => resolve(end.target.result);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // 2. Mortgage Calculator Logic
+        function calculateMortgage() {
+            const homePrice = parseFloat(document.getElementById('homePrice').value);
+            const downPayment = parseFloat(document.getElementById('downPayment').value);
+            const loanTerm = parseInt(document.getElementById('loanTerm').value);
+            const interestRate = parseFloat(document.getElementById('interestRate').value) / 100 / 12;
+
+            const loanAmount = homePrice - downPayment;
+            const numberOfPayments = loanTerm * 12;
+
+            let monthlyPayment = 0;
+            if (interestRate === 0) {
+                monthlyPayment = loanAmount / numberOfPayments;
+            } else {
+                monthlyPayment = loanAmount * (interestRate * Math.pow(1 + interestRate, numberOfPayments)) / (Math.pow(1 + interestRate, numberOfPayments) - 1);
+            }
+
+            document.getElementById('resLoanAmount').innerText = '$' + loanAmount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('resMonthlyPayment').innerText = '$' + monthlyPayment.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('mortgageResult').style.display = 'block';
+        }
+
+        // 3. Tip Calculator Logic
+        function calculateTip() {
+            const bill = parseFloat(document.getElementById('billAmount').value);
+            const tipPercent = parseFloat(document.getElementById('tipPercentage').value);
+            const people = parseInt(document.getElementById('numPeople').value);
+
+            if (isNaN(bill) || bill <= 0) {
+                alert('Please enter a valid bill amount.');
+                return;
+            }
+
+            const totalTip = bill * (tipPercent / 100);
+            const totalBill = bill + totalTip;
+            const perPerson = totalBill / people;
+
+            document.getElementById('resTotalTip').innerText = '$' + totalTip.toFixed(2);
+            document.getElementById('resTotalBill').innerText = '$' + totalBill.toFixed(2);
+            document.getElementById('resPerPerson').innerText = '$' + perPerson.toFixed(2);
+            document.getElementById('tipResult').style.display = 'block';
+        }
+
+        // 4. Word Counter Logic
+        function countText() {
+            const text = document.getElementById('textInput').value;
+            
+            // Character count
+            document.getElementById('charCount').innerText = text.length;
+            
+            // Word count
+            const words = text.trim().split(/\s+/);
+            document.getElementById('wordCount').innerText = text.trim() === '' ? 0 : words.length;
+        }
+    </script>
+</body>
+    </html>
+                    
