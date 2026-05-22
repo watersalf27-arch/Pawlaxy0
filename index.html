@@ -1,617 +1,619 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DailyKitBox — Free Online Utility Tools</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DailyKitBox — Free Online Utility Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-        :root {
-            --bg: #F5F4F0;
-            --surface: #FFFFFF;
-            --accent: #1A1A2E;
-            --accent2: #E84545;
-            --text: #1C1C1C;
-            --muted: #787878;
-            --border: #E2E0DA;
-            --sidebar-w: 240px;
-            --radius: 14px;
-        }
+:root{
+  --bg:#F5F4F0;
+  --surface:#FFFFFF;
+  --accent:#1A1A2E;
+  --accent2:#E84545;
+  --text:#1C1C1C;
+  --muted:#787878;
+  --border:#E2E0DA;
+  --sidebar-w:240px;
+  --radius:14px;
+}
 
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-        }
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  flex-direction:row;
+}
 
-        /* ── Sidebar ── */
-        aside {
-            width: var(--sidebar-w);
-            background: var(--accent);
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: 0; left: 0; bottom: 0;
-            z-index: 100;
-            transition: transform .3s ease;
-        }
+/* ── SIDEBAR ── */
+aside{
+  width:var(--sidebar-w);
+  min-width:var(--sidebar-w);
+  background:var(--accent);
+  display:flex;
+  flex-direction:column;
+  position:fixed;
+  top:0;left:0;bottom:0;
+  z-index:100;
+  overflow-y:auto;
+}
 
-        .logo-area {
-            padding: 28px 24px 20px;
-            border-bottom: 1px solid rgba(255,255,255,.08);
-        }
+.logo-area{
+  padding:28px 24px 20px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  flex-shrink:0;
+}
 
-        .logo-area h1 {
-            font-family: 'Syne', sans-serif;
-            font-size: 22px;
-            font-weight: 800;
-            color: #fff;
-            letter-spacing: -.3px;
-        }
+.logo-area h1{
+  font-family:'Syne',sans-serif;
+  font-size:22px;
+  font-weight:800;
+  color:#fff;
+  letter-spacing:-.3px;
+}
 
-        .logo-area h1 span { color: var(--accent2); }
+.logo-area h1 span{color:var(--accent2)}
 
-        .logo-area p {
-            font-size: 11px;
-            color: rgba(255,255,255,.4);
-            margin-top: 3px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+.logo-area p{
+  font-size:11px;
+  color:rgba(255,255,255,.4);
+  margin-top:3px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
 
-        nav {
-            padding: 16px 12px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
+nav{
+  padding:16px 12px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
 
-        .nav-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 11px 14px;
-            border-radius: 10px;
-            border: none;
-            background: transparent;
-            color: rgba(255,255,255,.55);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 13.5px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all .2s;
-            text-align: left;
-            width: 100%;
-        }
+.nav-btn{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:11px 14px;
+  border-radius:10px;
+  border:none;
+  background:transparent;
+  color:rgba(255,255,255,.55);
+  font-family:'DM Sans',sans-serif;
+  font-size:13.5px;
+  font-weight:500;
+  cursor:pointer;
+  transition:all .2s;
+  text-align:left;
+  width:100%;
+}
 
-        .nav-btn:hover { background: rgba(255,255,255,.07); color: #fff; }
+.nav-btn:hover{background:rgba(255,255,255,.07);color:#fff}
 
-        .nav-btn.active {
-            background: var(--accent2);
-            color: #fff;
-            font-weight: 600;
-        }
+.nav-btn.active{
+  background:var(--accent2);
+  color:#fff;
+  font-weight:600;
+}
 
-        .nav-btn .icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 7px;
-            background: rgba(255,255,255,.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 15px;
-            flex-shrink: 0;
-        }
+.nav-icon{
+  width:30px;height:30px;
+  border-radius:7px;
+  background:rgba(255,255,255,.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;flex-shrink:0;
+}
 
-        .nav-btn.active .icon { background: rgba(255,255,255,.2); }
+.nav-btn.active .nav-icon{background:rgba(255,255,255,.2)}
+.nav-label{flex:1;white-space:nowrap}
 
-        /* ── Main ── */
-        main {
-            margin-left: var(--sidebar-w);
-            flex: 1;
-            padding: 40px 48px;
-            max-width: calc(100% - var(--sidebar-w));
-        }
+/* ── MAIN ── */
+main{
+  margin-left:var(--sidebar-w);
+  flex:1;
+  padding:40px 48px;
+  min-height:100vh;
+}
 
-        .tool-section { display: none; animation: fadeUp .3s ease; }
-        .tool-section.active { display: block; }
+.tool-section{display:none;animation:fadeUp .3s ease}
+.tool-section.active{display:block}
 
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:translateY(0)}
+}
 
-        /* ── Cards & Headings ── */
-        .page-header { margin-bottom: 32px; }
+/* ── HEADERS ── */
+.page-header{margin-bottom:32px}
 
-        .page-header h2 {
-            font-family: 'Syne', sans-serif;
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--text);
-            letter-spacing: -.4px;
-        }
+.page-header h2{
+  font-family:'Syne',sans-serif;
+  font-size:28px;font-weight:800;
+  color:var(--text);letter-spacing:-.4px;
+}
 
-        .page-header p {
-            font-size: 14px;
-            color: var(--muted);
-            margin-top: 5px;
-        }
+.page-header p{font-size:14px;color:var(--muted);margin-top:5px}
 
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 28px;
-        }
+/* ── CARD ── */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:28px;
+}
 
-        /* ── Form Elements ── */
-        label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 7px;
-            letter-spacing: .1px;
-        }
+/* ── FORM ── */
+label{
+  display:block;
+  font-size:13px;font-weight:600;
+  color:var(--text);
+  margin-bottom:7px;letter-spacing:.1px;
+}
 
-        input[type="text"],
-        input[type="number"],
-        textarea,
-        select {
-            width: 100%;
-            padding: 11px 14px;
-            border: 1.5px solid var(--border);
-            border-radius: 9px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 14px;
-            color: var(--text);
-            background: #FAFAF8;
-            outline: none;
-            transition: border-color .2s;
-        }
+input[type="text"],
+input[type="number"],
+textarea,select{
+  width:100%;
+  padding:11px 14px;
+  border:1.5px solid var(--border);
+  border-radius:9px;
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;color:var(--text);
+  background:#FAFAF8;outline:none;
+  transition:border-color .2s;
+}
 
-        input:focus, textarea:focus, select:focus {
-            border-color: var(--accent);
-            background: #fff;
-        }
+input:focus,textarea:focus,select:focus{
+  border-color:var(--accent);background:#fff;
+}
 
-        .field { margin-bottom: 18px; }
+.field{margin-bottom:18px}
 
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            padding: 13px 20px;
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background .2s, transform .1s;
-            letter-spacing: .2px;
-        }
+.btn-primary{
+  display:inline-flex;
+  align-items:center;justify-content:center;
+  gap:8px;width:100%;
+  padding:13px 20px;
+  background:var(--accent);color:#fff;
+  border:none;border-radius:10px;
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;font-weight:600;
+  cursor:pointer;
+  transition:background .2s,transform .1s;
+  letter-spacing:.2px;
+}
 
-        .btn-primary:hover { background: #2d2d4e; }
-        .btn-primary:active { transform: scale(.98); }
-        .btn-primary:disabled { opacity: .6; cursor: not-allowed; }
+.btn-primary:hover{background:#2d2d4e}
+.btn-primary:active{transform:scale(.98)}
+.btn-primary:disabled{opacity:.6;cursor:not-allowed}
 
-        /* ── Upload Zone ── */
-        .upload-zone {
-            border: 2px dashed var(--border);
-            border-radius: var(--radius);
-            padding: 40px 20px;
-            text-align: center;
-            background: #FAFAF8;
-            cursor: pointer;
-            transition: border-color .2s, background .2s;
-            position: relative;
-        }
+/* ── UPLOAD ZONE ── */
+.upload-zone{
+  border:2px dashed var(--border);
+  border-radius:var(--radius);
+  padding:40px 20px;
+  text-align:center;
+  background:#FAFAF8;
+  cursor:pointer;
+  transition:border-color .2s,background .2s;
+  position:relative;
+}
 
-        .upload-zone:hover, .upload-zone.drag-over {
-            border-color: var(--accent);
-            background: #f0f0f8;
-        }
+.upload-zone:hover,.upload-zone.drag-over{
+  border-color:var(--accent);background:#f0f0f8;
+}
 
-        .upload-zone input[type="file"] {
-            position: absolute;
-            inset: 0;
-            opacity: 0;
-            cursor: pointer;
-            width: 100%;
-            height: 100%;
-        }
+.upload-zone input[type="file"]{
+  position:absolute;inset:0;
+  opacity:0;cursor:pointer;
+  width:100%;height:100%;
+}
 
-        .upload-zone .upload-icon { font-size: 36px; margin-bottom: 10px; }
-        .upload-zone .upload-label { font-size: 14px; font-weight: 600; color: var(--text); }
-        .upload-zone .upload-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.upload-icon{font-size:36px;margin-bottom:10px}
+.upload-label{font-size:14px;font-weight:600;color:var(--text)}
+.upload-sub{font-size:12px;color:var(--muted);margin-top:4px}
 
-        /* ── Status / Result Boxes ── */
-        .status-msg {
-            margin-top: 16px;
-            padding: 12px 16px;
-            border-radius: 9px;
-            font-size: 13.5px;
-            font-weight: 500;
-            display: none;
-        }
+/* ── STATUS ── */
+.status-msg{
+  margin-top:16px;padding:12px 16px;
+  border-radius:9px;font-size:13.5px;font-weight:500;
+  display:none;
+}
 
-        .status-msg.info { background: #EEF2FF; color: #3730A3; }
-        .status-msg.success { background: #ECFDF5; color: #065F46; }
-        .status-msg.error { background: #FEF2F2; color: #991B1B; }
+.status-msg.info{background:#EEF2FF;color:#3730A3}
+.status-msg.success{background:#ECFDF5;color:#065F46}
+.status-msg.error{background:#FEF2F2;color:#991B1B}
 
-        .result-box {
-            margin-top: 20px;
-            padding: 20px 24px;
-            background: var(--bg);
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius);
-            display: none;
-        }
+/* ── WEATHER ── */
+.weather-card{
+  background:linear-gradient(135deg,#1A1A2E 0%,#16213E 60%,#0F3460 100%);
+  border-radius:var(--radius);
+  padding:32px;color:#fff;
+  display:none;margin-top:20px;
+}
 
-        /* ── Weather Card ── */
-        .weather-card {
-            background: linear-gradient(135deg, #1A1A2E 0%, #16213E 60%, #0F3460 100%);
-            border-radius: var(--radius);
-            padding: 32px;
-            color: #fff;
-            display: none;
-            margin-top: 20px;
-        }
+.weather-card .city-name{font-family:'Syne',sans-serif;font-size:26px;font-weight:700}
+.weather-card .country-name{font-size:13px;color:rgba(255,255,255,.5);margin-top:2px}
+.weather-card .temp{font-family:'Syne',sans-serif;font-size:64px;font-weight:800;line-height:1;margin:16px 0 8px}
+.weather-card .desc{font-size:14px;color:rgba(255,255,255,.7);text-transform:capitalize}
 
-        .weather-card .city-name {
-            font-family: 'Syne', sans-serif;
-            font-size: 26px;
-            font-weight: 700;
-        }
+.weather-stats{
+  display:flex;gap:12px;
+  margin-top:24px;padding-top:20px;
+  border-top:1px solid rgba(255,255,255,.1);
+  flex-wrap:wrap;
+}
 
-        .weather-card .country-name {
-            font-size: 13px;
-            color: rgba(255,255,255,.5);
-            margin-top: 2px;
-        }
+.weather-stat{
+  background:rgba(255,255,255,.08);
+  border-radius:10px;padding:12px 16px;
+  flex:1;min-width:120px;
+}
 
-        .weather-card .temp {
-            font-family: 'Syne', sans-serif;
-            font-size: 64px;
-            font-weight: 800;
-            line-height: 1;
-            margin: 16px 0 8px;
-        }
+.weather-stat .stat-label{font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px}
+.weather-stat .stat-val{font-size:18px;font-weight:700;margin-top:4px}
 
-        .weather-card .desc {
-            font-size: 14px;
-            color: rgba(255,255,255,.7);
-            text-transform: capitalize;
-        }
+/* ── MORTGAGE ── */
+.mortgage-result{
+  background:var(--accent);color:#fff;
+  border-radius:var(--radius);padding:24px;
+  margin-top:20px;display:none;text-align:center;
+}
 
-        .weather-stats {
-            display: flex;
-            gap: 20px;
-            margin-top: 24px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,.1);
-        }
+.mortgage-result .label{font-size:13px;color:rgba(255,255,255,.6)}
+.mortgage-result .amount{font-family:'Syne',sans-serif;font-size:42px;font-weight:800;margin-top:6px}
+.mortgage-result .sub{font-size:12px;color:rgba(255,255,255,.45);margin-top:4px}
 
-        .weather-stat {
-            background: rgba(255,255,255,.08);
-            border-radius: 10px;
-            padding: 12px 16px;
-            flex: 1;
-        }
+.mortgage-breakdown{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:10px;margin-top:16px;
+}
 
-        .weather-stat .stat-label {
-            font-size: 11px;
-            color: rgba(255,255,255,.5);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+.m-stat{
+  background:rgba(255,255,255,.08);
+  border-radius:8px;padding:12px;text-align:center;
+}
 
-        .weather-stat .stat-val {
-            font-size: 18px;
-            font-weight: 700;
-            margin-top: 4px;
-        }
+.m-stat-val{font-size:16px;font-weight:700}
+.m-stat-lbl{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
 
-        /* ── Mortgage Result ── */
-        .mortgage-result {
-            background: var(--accent);
-            color: #fff;
-            border-radius: var(--radius);
-            padding: 24px;
-            margin-top: 20px;
-            display: none;
-            text-align: center;
-        }
+/* ── TIP ── */
+.tip-table{
+  display:none;margin-top:20px;
+  border:1.5px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;
+}
 
-        .mortgage-result .label { font-size: 13px; color: rgba(255,255,255,.6); }
-        .mortgage-result .amount {
-            font-family: 'Syne', sans-serif;
-            font-size: 42px;
-            font-weight: 800;
-            margin-top: 6px;
-        }
+.tip-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 20px;font-size:14px;
+  border-bottom:1px solid var(--border);
+}
 
-        .mortgage-result .sub {
-            font-size: 12px;
-            color: rgba(255,255,255,.45);
-            margin-top: 4px;
-        }
+.tip-row:last-child{border-bottom:none}
+.tip-row.highlight{background:var(--accent);color:#fff;font-weight:700}
+.tip-row .tip-val{font-weight:600}
 
-        /* ── Tip Result ── */
-        .tip-table {
-            display: none;
-            margin-top: 20px;
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
+/* ── WORD COUNTER ── */
+.word-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:12px;margin-top:16px;
+}
 
-        .tip-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 20px;
-            font-size: 14px;
-            border-bottom: 1px solid var(--border);
-        }
+.word-stat-box{
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:10px;padding:16px;text-align:center;
+}
 
-        .tip-row:last-child { border-bottom: none; }
-        .tip-row.highlight { background: var(--accent); color: #fff; font-weight: 700; }
-        .tip-row .tip-val { font-weight: 600; }
+.word-stat-box .stat-n{
+  font-family:'Syne',sans-serif;
+  font-size:32px;font-weight:800;color:var(--accent);
+}
 
-        /* ── Word Counter ── */
-        .word-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-top: 16px;
-        }
+.word-stat-box .stat-l{
+  font-size:11px;text-transform:uppercase;
+  letter-spacing:1px;color:var(--muted);margin-top:3px;
+}
 
-        .word-stat-box {
-            background: var(--surface);
-            border: 1.5px solid var(--border);
-            border-radius: 10px;
-            padding: 16px;
-            text-align: center;
-        }
+/* ── GRID / FLEX HELPERS ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.row-flex{display:flex;gap:12px}
+.row-flex input{flex:1}
 
-        .word-stat-box .stat-n {
-            font-family: 'Syne', sans-serif;
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--accent);
-        }
+/* ── IMAGE PREVIEW ── */
+#imagePreviewArea{
+  display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;
+}
 
-        .word-stat-box .stat-l {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--muted);
-            margin-top: 3px;
-        }
+#imagePreviewArea img{
+  width:80px;height:80px;object-fit:cover;
+  border-radius:8px;border:2px solid var(--border);
+}
 
-        /* ── Grid helpers ── */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .row-flex { display: flex; gap: 12px; }
-        .row-flex input { flex: 1; }
+/* ── MOBILE ── */
+@media(max-width:768px){
+  body{flex-direction:column}
 
-        /* ── File preview ── */
-        #imagePreviewArea {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 16px;
-        }
+  aside{
+    width:100%;min-width:100%;
+    position:relative;height:auto;
+    flex-direction:column;
+  }
 
-        #imagePreviewArea img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 2px solid var(--border);
-        }
+  .logo-area{padding:16px 20px 12px}
 
-        /* ── Responsive ── */
-        @media (max-width: 768px) {
-            aside {
-                width: 100%;
-                height: auto;
-                position: relative;
-                flex-direction: row;
-                align-items: center;
-                padding: 12px;
-            }
+  nav{
+    flex-direction:row;
+    padding:8px 12px 12px;
+    gap:6px;
+    overflow-x:auto;
+  }
 
-            .logo-area { padding: 0 16px 0 8px; border-bottom: none; border-right: 1px solid rgba(255,255,255,.1); }
-            .logo-area p { display: none; }
+  .nav-btn{
+    flex-direction:column;
+    gap:4px;padding:10px 12px;
+    min-width:64px;
+    align-items:center;
+    font-size:11px;
+  }
 
-            nav { flex-direction: row; padding: 0 8px; gap: 6px; overflow-x: auto; }
-            .nav-btn .label { display: none; }
-            .nav-btn { padding: 8px 10px; }
-            .nav-btn .icon { margin: 0; }
+  .nav-label{font-size:11px;white-space:nowrap}
 
-            body { flex-direction: column; }
-            main { margin-left: 0; max-width: 100%; padding: 20px 16px; }
-            .grid-2 { grid-template-columns: 1fr; }
-            .weather-stats { flex-direction: column; }
-            .word-stats { grid-template-columns: 1fr 1fr; }
-        }
-    </style>
+  main{
+    margin-left:0;
+    padding:20px 16px;
+    min-height:auto;
+  }
+
+  .grid-2{grid-template-columns:1fr}
+  .weather-stats{flex-direction:column}
+  .word-stats{grid-template-columns:1fr 1fr}
+  .mortgage-breakdown{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
 
+<!-- ══════════════ SIDEBAR ══════════════ -->
 <aside>
-    <div class="logo-area">
-        <h1>Daily<span>Kit</span>Box</h1>
-        <p>Smart Utilities</p>
-    </div>
-    <nav>
-        <button class="nav-btn active" onclick="switchTool('jpgToPdf')" id="btn-jpgToPdf">
-            <span class="icon">📄</span>
-            <span class="label">JPG to PDF</span>
-        </button>
-        <button class="nav-btn" onclick="switchTool('weather')" id="btn-weather">
-            <span class="icon">🌤️</span>
-            <span class="label">Weather</span>
-        </button>
-        <button class="nav-btn" onclick="switchTool('mortgage')" id="btn-mortgage">
-            <span class="icon">🏠</span>
-            <span class="label">Mortgage</span>
-        </button>
-        <button class="nav-btn" onclick="switchTool('tip')" id="btn-tip">
-            <span class="icon">🍽️</span>
-            <span class="label">Tip Calc</span>
-        </button>
-        <button class="nav-btn" onclick="switchTool('word')" id="btn-word">
-            <span class="icon">✍️</span>
-            <span class="label">Word Count</span>
-        </button>
-    </nav>
+  <div class="logo-area">
+    <h1>Daily<span>Kit</span>Box</h1>
+    <p>Smart Utilities</p>
+  </div>
+  <nav>
+    <button class="nav-btn active" onclick="switchTool('jpgToPdf')" id="btn-jpgToPdf">
+      <span class="nav-icon">📄</span>
+      <span class="nav-label">JPG to PDF</span>
+    </button>
+    <button class="nav-btn" onclick="switchTool('weather')" id="btn-weather">
+      <span class="nav-icon">🌤️</span>
+      <span class="nav-label">Weather</span>
+    </button>
+    <button class="nav-btn" onclick="switchTool('mortgage')" id="btn-mortgage">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Mortgage</span>
+    </button>
+    <button class="nav-btn" onclick="switchTool('tip')" id="btn-tip">
+      <span class="nav-icon">🍽️</span>
+      <span class="nav-label">Tip Calc</span>
+    </button>
+    <button class="nav-btn" onclick="switchTool('word')" id="btn-word">
+      <span class="nav-icon">✍️</span>
+      <span class="nav-label">Word Count</span>
+    </button>
+  </nav>
 </aside>
 
+<!-- ══════════════ MAIN ══════════════ -->
 <main>
 
-    <!-- ══ JPG to PDF ══ -->
-    <section id="jpgToPdf" class="tool-section active">
-        <div class="page-header">
-            <h2>JPG to PDF Converter</h2>
-            <p>Combine multiple JPG images into a single PDF document — processed entirely in your browser.</p>
+  <!-- ══ JPG to PDF ══ -->
+  <section id="jpgToPdf" class="tool-section active">
+    <div class="page-header">
+      <h2>JPG to PDF Converter</h2>
+      <p>Combine multiple JPG images into a single PDF — processed entirely in your browser.</p>
+    </div>
+
+    <div class="card">
+      <div class="field">
+        <label>Upload JPG / JPEG Images</label>
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="imageInput" accept="image/jpeg,image/jpg,image/png" multiple onchange="previewImages()">
+          <div class="upload-icon">📁</div>
+          <div class="upload-label">Click to browse or drag & drop</div>
+          <div class="upload-sub">Supports JPG, JPEG, PNG • Multiple files allowed</div>
         </div>
+        <div id="imagePreviewArea"></div>
+      </div>
 
-        <div class="card">
-            <div class="field">
-                <label>Upload JPG / JPEG Images</label>
-                <div class="upload-zone" id="uploadZone">
-                    <input type="file" id="imageInput" accept="image/jpeg,image/jpg,image/png" multiple onchange="previewImages()">
-                    <div class="upload-icon">📁</div>
-                    <div class="upload-label">Click to browse or drag & drop</div>
-                    <div class="upload-sub">Supports JPG, JPEG, PNG • Multiple files allowed</div>
-                </div>
-                <div id="imagePreviewArea"></div>
-            </div>
+      <div class="field">
+        <label>Page Fit</label>
+        <select id="pageFit">
+          <option value="fit">Fit to page (maintain aspect ratio)</option>
+          <option value="fill">Fill page (stretch to fill)</option>
+        </select>
+      </div>
 
-            <div class="field">
-                <label>Page Fit</label>
-                <select id="pageFit">
-                    <option value="fit">Fit to page (maintain aspect ratio)</option>
-                    <option value="fill">Fill page (stretch to fill)</option>
-                </select>
-            </div>
+      <button class="btn-primary" id="convertBtn" onclick="convertToPDF()">
+        ⬇️ Convert & Download PDF
+      </button>
+      <div id="pdfStatus" class="status-msg"></div>
+    </div>
 
-            <button class="btn-primary" id="convertBtn" onclick="convertToPDF()">
-                ⬇️ Convert & Download PDF
-            </button>
+    <div class="card" style="margin-top:20px">
+      <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;margin-bottom:8px">Why use PDF format?</h3>
+      <p style="font-size:13.5px;color:var(--muted);line-height:1.7">PDF (Portable Document Format) is the global standard for sharing documents. It preserves layout across all devices, is accepted by every major institution, and is ideal for printing, archiving, and sharing professionally.</p>
+    </div>
+  </section>
 
-            <div id="pdfStatus" class="status-msg"></div>
+  <!-- ══ Weather ══ -->
+  <section id="weather" class="tool-section">
+    <div class="page-header">
+      <h2>Real-Time Weather</h2>
+      <p>Get live weather for any city worldwide using Open-Meteo's free geocoding & forecast API.</p>
+    </div>
+
+    <div class="card">
+      <div class="field">
+        <label>City Name</label>
+        <div class="row-flex">
+          <input type="text" id="cityInput" placeholder="e.g. London, New York, Tokyo" onkeydown="if(event.key==='Enter') getWeather()">
+          <button class="btn-primary" style="width:auto;padding:11px 22px" onclick="getWeather()">Search</button>
         </div>
+      </div>
+      <div id="weatherStatus" class="status-msg"></div>
+    </div>
 
-        <div class="card" style="margin-top:20px">
-            <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;margin-bottom:8px">Why use PDF format?</h3>
-            <p style="font-size:13.5px;color:var(--muted);line-height:1.7">PDF (Portable Document Format) is the global standard for sharing documents. It preserves layout across all devices, is accepted by every major institution, and is ideal for printing, archiving, and sharing professionally.</p>
+    <div class="weather-card" id="weatherCard">
+      <div class="city-name" id="wCity">—</div>
+      <div class="country-name" id="wCountry"></div>
+      <div class="temp" id="wTemp">—</div>
+      <div class="desc" id="wDesc">—</div>
+      <div class="weather-stats">
+        <div class="weather-stat"><div class="stat-label">💧 Humidity</div><div class="stat-val" id="wHumid">—</div></div>
+        <div class="weather-stat"><div class="stat-label">💨 Wind</div><div class="stat-val" id="wWind">—</div></div>
+        <div class="weather-stat"><div class="stat-label">🌡️ Feels Like</div><div class="stat-val" id="wFeels">—</div></div>
+        <div class="weather-stat"><div class="stat-label">🌧️ Rain (1h)</div><div class="stat-val" id="wRain">—</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ Mortgage ══ -->
+  <section id="mortgage" class="tool-section">
+    <div class="page-header">
+      <h2>Mortgage Calculator</h2>
+      <p>Estimate your monthly repayments based on standard amortisation formula.</p>
+    </div>
+
+    <div class="card" style="max-width:520px">
+      <div class="field">
+        <label>Property Price</label>
+        <input type="number" id="homePrice" value="350000" placeholder="£ or $">
+      </div>
+      <div class="field">
+        <label>Deposit / Down Payment</label>
+        <input type="number" id="downPayment" value="70000" placeholder="£ or $">
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Annual Interest Rate (%)</label>
+          <input type="number" id="interestRate" value="5.25" step="0.05">
         </div>
-    </section>
-
-    <!-- ══ Weather ══ -->
-    <section id="weather" class="tool-section">
-        <div class="page-header">
-            <h2>Real-Time Weather</h2>
-            <p>Get live weather for any city worldwide using Open-Meteo's free geocoding and forecast API.</p>
+        <div class="field">
+          <label>Mortgage Term (Years)</label>
+          <input type="number" id="loanTerm" value="25">
         </div>
+      </div>
+      <button class="btn-primary" onclick="calculateMortgage()">Calculate Monthly Payment</button>
 
-        <div class="card">
-            <div class="field">
-                <label>City Name</label>
-                <div class="row-flex">
-                    <input type="text" id="cityInput" placeholder="e.g. London, New York, Tokyo" onkeydown="if(event.key==='Enter') getWeather()">
-                    <button class="btn-primary" style="width:auto;padding:11px 22px" onclick="getWeather()">Search</button>
-                </div>
-            </div>
-            <div id="weatherStatus" class="status-msg"></div>
+      <div class="mortgage-result" id="mortgageResult">
+        <div class="label">Estimated Monthly Repayment</div>
+        <div class="amount" id="monthlyPayment">£0</div>
+        <div class="sub" id="mortgageSub">—</div>
+        <div class="mortgage-breakdown">
+          <div class="m-stat">
+            <div class="m-stat-val" id="mLoanAmt">—</div>
+            <div class="m-stat-lbl">Loan Amount</div>
+          </div>
+          <div class="m-stat">
+            <div class="m-stat-val" id="mTotalPaid">—</div>
+            <div class="m-stat-lbl">Total Paid</div>
+          </div>
+          <div class="m-stat">
+            <div class="m-stat-val" id="mTotalInterest">—</div>
+            <div class="m-stat-lbl">Total Interest</div>
+          </div>
         </div>
+      </div>
+    </div>
+  </section>
 
-        <div class="weather-card" id="weatherCard">
-            <div class="city-name" id="wCity">—</div>
-            <div class="country-name" id="wCountry"></div>
-            <div class="temp" id="wTemp">—</div>
-            <div class="desc" id="wDesc">—</div>
-            <div class="weather-stats">
-                <div class="weather-stat">
-                    <div class="stat-label">💧 Humidity</div>
-                    <div class="stat-val" id="wHumid">—</div>
-                </div>
-                <div class="weather-stat">
-                    <div class="stat-label">💨 Wind Speed</div>
-                    <div class="stat-val" id="wWind">—</div>
-                </div>
-                <div class="weather-stat">
-                    <div class="stat-label">🌡️ Feels Like</div>
-                    <div class="stat-val" id="wFeels">—</div>
-                </div>
-                <div class="weather-stat">
-                    <div class="stat-label">🌧️ Rain (1h)</div>
-                    <div class="stat-val" id="wRain">—</div>
-                </div>
-            </div>
+  <!-- ══ Tip Calculator ══ -->
+  <section id="tip" class="tool-section">
+    <div class="page-header">
+      <h2>Tip Calculator</h2>
+      <p>Split the bill fairly. Standard UK/US tipping rates included.</p>
+    </div>
+
+    <div class="card" style="max-width:480px">
+      <div class="field">
+        <label>Bill Amount</label>
+        <input type="number" id="billAmount" value="50" step="0.01" placeholder="Enter total bill">
+      </div>
+
+      <div class="field">
+        <label>Tip Percentage</label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+          <button class="tip-preset" onclick="setTip(10)" style="flex:1;padding:9px;border:1.5px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .2s">10%</button>
+          <button class="tip-preset" onclick="setTip(15)" style="flex:1;padding:9px;border:1.5px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .2s">15%</button>
+          <button class="tip-preset" onclick="setTip(18)" style="flex:1;padding:9px;border:1.5px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .2s">18%</button>
+          <button class="tip-preset" onclick="setTip(20)" style="flex:1;padding:9px;border:1.5px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .2s">20%</button>
+          <button class="tip-preset" onclick="setTip(25)" style="flex:1;padding:9px;border:1.5px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .2s">25%</button>
         </div>
-    </section>
+        <input type="number" id="tipPercent" value="15" placeholder="Custom tip %" onchange="calculateTip()">
+      </div>
 
-    <!-- ══ Mortgage ══ -->
-    <section id="mortgage" class="tool-section">
-        <div class="page-header">
-            <h2>Mortgage Calculator</h2>
-            <p>Estimate your monthly repayments based on UK/US standard amortisation formula.</p>
-        </div>
+      <div class="field">
+        <label>Number of People</label>
+        <input type="number" id="numPeople" value="2" min="1" placeholder="Split between how many?">
+      </div>
 
-        <div class="card" style="max-width:520px">
-            <div class="field">
-                <label>Property Price</label>
-                <input type="number" id="homePrice" value="350000" placeholder="£ or $">
-            </div>
-            <div class="field">
-                <label>Deposit / Down Payment</label>
-                <input type="number" id="downPayment" value="70000" placeholder="£ or $">
-            </div>
-            <div class="grid-2">
-                <div class="field">
-                    <label>Annual Interest Rate (%)</label>
-                    <input type="number" id="interestRate" value="5.25" step="0.05">
-                </div>
-                <div class="field">
-                    <label>Mortgage Term (Years)</label>
-                    <input type="number" id="loanTerm" value="25">
-                </div>
-            </div>
-            <button class="btn-primary" onclick="calculateMortgage()">Calculate Monthly Payment</button>
+      <button class="btn-primary" onclick="calculateTip()">Calculate Tip</button>
 
-            <div class="mortgage-result" id="mortgageResult">
-                <div class="label">Estimated Monthly Repayment</div>
-                <div class="amount" id="monthlyPayment">£0</div>
-                <div class="sub" id="mortgageSub">—</div>
-            </div>
-        </div>
-    </section>
+      <div class="tip-table" id="tipTable">
+        <div class="tip-row"><span>Bill Amount</span><span class="tip-val" id="tBill">—</span></div>
+        <div class="tip-row"><span>Tip Amount</span><span class="tip-val" id="tTip">—</span></div>
+        <div class="tip-row"><span>Total Amount</span><span class="tip-val" id="tTotal">—</span></div>
+        <div class="tip-row highlight"><span>Per Person</span><span class="tip-val" id="tPer">—</span></div>
+      </div>
+    </div>
+  </section>
 
-    <!-- ══ Tip Calculator ══ -->
-    <section id="tip" class="tool-section">
-        <div class="page-header">
-            <h2>Tip Calculator</h2>
-            <p>Split the bill fairly. Standard UK/US tipping rates included.</p>
-        </div>
+  <!-- ══ Word Counter ══ -->
+  <section id="word" class="tool-section">
+    <div class="page-header">
+      <h2>Word Counter</h2>
+      <p>Instantly count words, characters, sentences, and reading time.</p>
+    </div>
 
-        <div class="card" style="max-width:480px">
-            <div class="field">
-                <label>Bill
+    <div class="card">
+      <div class="field">
+        <label>Paste or Type Your Text</label>
+        <textarea id="wordTextarea" rows="10" placeholder="Start typing or paste your text here..." oninput="countWords()" style="resize:vertical"></textarea>
+      </div>
+      <button class="btn-primary" onclick="countWords()">Analyse Text</button>
+    </div>
+
+    <div class="word-stats" id="wordStats">
+      <div class="word-stat-box"><div class="stat-n" id="wWords">0</div><div class="stat-l">Words</div></div>
+      <div class="word-stat-box"><div class="stat-n" id="wChars">0</div><div class="stat-l">Characters</div></div>
+      <div class="word-stat-box"><div class="stat-n" id="wCharsNoSpace">0</div><div class="stat-l">No Spaces</div></div>
+      <div class="word-stat-box"><div class="stat-n" id="wSentences">0</div><div class="stat-l">Sentences</div></div>
+      <div class="word-stat-box"><div class="stat-n" id="wParagraphs">0</div><div class="stat-l">Paragraphs</div></div>
+      <div class="word-stat-box"><div class="stat-n" id="wReadTime">0 min</div><div class="stat-l">Read Time</div></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ══════════════ JAVASCRIPT ══════════════ -->
+<script>
+// ── Navigation ──
+function switchTool(id) {
+  document.querySelectorAll('.tool-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('btn-' + id).classList.add('active');
+}
+
+// ── Drag & Drop ──
+const uploadZone = document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEvent
