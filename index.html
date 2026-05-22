@@ -1,619 +1,456 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DailyKitBox — Free Online Utility Tools</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+import { useState, useEffect, useRef, useCallback } from "react";
 
-:root{
-  --bg:#F5F4F0;
-  --surface:#FFFFFF;
-  --accent:#1A1A2E;
-  --accent2:#E84545;
-  --text:#1C1C1C;
-  --muted:#787878;
-  --border:#E2E0DA;
-  --sidebar-w:240px;
-  --radius:14px;
+// ─── jsPDF loader ───────────────────────────────────────────
+function usejsPDF() {
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    if (window.jspdf) { setReady(true); return; }
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+    s.onload = () => setReady(true);
+    document.head.appendChild(s);
+  }, []);
+  return ready;
 }
 
-body{
-  font-family:'DM Sans',sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
-  display:flex;
-  flex-direction:row;
-}
+// ─── Google Fonts ────────────────────────────────────────────
+const fontLink = document.createElement("link");
+fontLink.rel = "stylesheet";
+fontLink.href = "https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap";
+document.head.appendChild(fontLink);
 
-/* ── SIDEBAR ── */
-aside{
-  width:var(--sidebar-w);
-  min-width:var(--sidebar-w);
-  background:var(--accent);
-  display:flex;
-  flex-direction:column;
-  position:fixed;
-  top:0;left:0;bottom:0;
-  z-index:100;
-  overflow-y:auto;
-}
+// ─── WMO Weather codes ───────────────────────────────────────
+const WMO = {
+  0:"☀️ Clear Sky",1:"🌤️ Mainly Clear",2:"⛅ Partly Cloudy",3:"☁️ Overcast",
+  45:"🌫️ Foggy",48:"🌫️ Icy Fog",51:"🌦️ Light Drizzle",53:"🌦️ Drizzle",55:"🌧️ Heavy Drizzle",
+  61:"🌧️ Slight Rain",63:"🌧️ Moderate Rain",65:"🌧️ Heavy Rain",
+  71:"🌨️ Slight Snow",73:"🌨️ Moderate Snow",75:"❄️ Heavy Snow",
+  80:"🌦️ Showers",81:"🌧️ Heavy Showers",82:"⛈️ Violent Showers",
+  95:"⛈️ Thunderstorm",96:"⛈️ Thunderstorm+Hail",99:"⛈️ Severe Thunderstorm",
+};
 
-.logo-area{
-  padding:28px 24px 20px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  flex-shrink:0;
-}
+// ═══════════════════════════════════════════════════════════════
+// STYLES
+// ═══════════════════════════════════════════════════════════════
+const G = {
+  bg:"#F5F4F0", surface:"#fff", accent:"#1A1A2E", red:"#E84545",
+  text:"#1C1C1C", muted:"#787878", border:"#E2E0DA",
+};
 
-.logo-area h1{
-  font-family:'Syne',sans-serif;
-  font-size:22px;
-  font-weight:800;
-  color:#fff;
-  letter-spacing:-.3px;
-}
+const css = {
+  app:{ display:"flex", minHeight:"100vh", fontFamily:"'DM Sans',sans-serif",
+        background:G.bg, color:G.text },
 
-.logo-area h1 span{color:var(--accent2)}
+  // Sidebar
+  aside:{ width:240, minWidth:240, background:G.accent, display:"flex",
+          flexDirection:"column", minHeight:"100vh", position:"sticky",
+          top:0, height:"100vh", overflowY:"auto" },
+  logoArea:{ padding:"28px 24px 20px",
+             borderBottom:"1px solid rgba(255,255,255,.08)", flexShrink:0 },
+  logoH:{ fontFamily:"'Syne',sans-serif", fontSize:22, fontWeight:800,
+          color:"#fff", letterSpacing:-.3, margin:0 },
+  logoSub:{ fontSize:11, color:"rgba(255,255,255,.4)", marginTop:3,
+            textTransform:"uppercase", letterSpacing:1 },
+  nav:{ padding:"16px 12px", display:"flex", flexDirection:"column", gap:4 },
 
-.logo-area p{
-  font-size:11px;
-  color:rgba(255,255,255,.4);
-  margin-top:3px;
-  text-transform:uppercase;
-  letter-spacing:1px;
-}
+  // Main
+  main:{ flex:1, padding:"40px 48px", minWidth:0 },
+  pageHdr:{ marginBottom:32 },
+  pageH2:{ fontFamily:"'Syne',sans-serif", fontSize:28, fontWeight:800,
+           letterSpacing:-.4, margin:0 },
+  pageSub:{ fontSize:14, color:G.muted, marginTop:5 },
 
-nav{
-  padding:16px 12px;
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-}
+  // Card
+  card:{ background:G.surface, border:`1px solid ${G.border}`,
+         borderRadius:14, padding:28, marginBottom:20 },
 
-.nav-btn{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:11px 14px;
-  border-radius:10px;
-  border:none;
-  background:transparent;
-  color:rgba(255,255,255,.55);
-  font-family:'DM Sans',sans-serif;
-  font-size:13.5px;
-  font-weight:500;
-  cursor:pointer;
-  transition:all .2s;
-  text-align:left;
-  width:100%;
-}
+  // Field
+  field:{ marginBottom:18 },
+  label:{ display:"block", fontSize:13, fontWeight:600, marginBottom:7,
+          letterSpacing:.1 },
+  input:{ width:"100%", padding:"11px 14px",
+          border:`1.5px solid ${G.border}`, borderRadius:9,
+          fontFamily:"'DM Sans',sans-serif", fontSize:14,
+          color:G.text, background:"#FAFAF8", outline:"none",
+          boxSizing:"border-box" },
+  textarea:{ width:"100%", padding:"11px 14px",
+             border:`1.5px solid ${G.border}`, borderRadius:9,
+             fontFamily:"'DM Sans',sans-serif", fontSize:14,
+             color:G.text, background:"#FAFAF8", outline:"none",
+             resize:"vertical", minHeight:180, boxSizing:"border-box" },
+  select:{ width:"100%", padding:"11px 14px",
+           border:`1.5px solid ${G.border}`, borderRadius:9,
+           fontFamily:"'DM Sans',sans-serif", fontSize:14,
+           color:G.text, background:"#FAFAF8", outline:"none" },
 
-.nav-btn:hover{background:rgba(255,255,255,.07);color:#fff}
+  // Buttons
+  btnPrimary:{ display:"flex", alignItems:"center", justifyContent:"center",
+               gap:8, width:"100%", padding:"13px 20px",
+               background:G.accent, color:"#fff", border:"none",
+               borderRadius:10, fontFamily:"'DM Sans',sans-serif",
+               fontSize:14, fontWeight:600, cursor:"pointer", letterSpacing:.2 },
+  btnSmall:{ padding:"11px 22px", width:"auto", flexShrink:0 },
 
-.nav-btn.active{
-  background:var(--accent2);
-  color:#fff;
-  font-weight:600;
-}
+  // Upload
+  uploadZone:{ border:`2px dashed ${G.border}`, borderRadius:14,
+               padding:"40px 20px", textAlign:"center",
+               background:"#FAFAF8", cursor:"pointer", position:"relative",
+               transition:"border-color .2s, background .2s" },
+  uploadInput:{ position:"absolute", inset:0, opacity:0,
+                cursor:"pointer", width:"100%", height:"100%" },
 
-.nav-icon{
-  width:30px;height:30px;
-  border-radius:7px;
-  background:rgba(255,255,255,.1);
-  display:flex;align-items:center;justify-content:center;
-  font-size:15px;flex-shrink:0;
-}
+  // Status
+  status:{ marginTop:16, padding:"12px 16px", borderRadius:9,
+           fontSize:13.5, fontWeight:500 },
+  info:{ background:"#EEF2FF", color:"#3730A3" },
+  success:{ background:"#ECFDF5", color:"#065F46" },
+  error:{ background:"#FEF2F2", color:"#991B1B" },
 
-.nav-btn.active .nav-icon{background:rgba(255,255,255,.2)}
-.nav-label{flex:1;white-space:nowrap}
+  // Grid helpers
+  grid2:{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:16 },
+  rowFlex:{ display:"flex", gap:12 },
+};
 
-/* ── MAIN ── */
-main{
-  margin-left:var(--sidebar-w);
-  flex:1;
-  padding:40px 48px;
-  min-height:100vh;
-}
-
-.tool-section{display:none;animation:fadeUp .3s ease}
-.tool-section.active{display:block}
-
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(12px)}
-  to{opacity:1;transform:translateY(0)}
-}
-
-/* ── HEADERS ── */
-.page-header{margin-bottom:32px}
-
-.page-header h2{
-  font-family:'Syne',sans-serif;
-  font-size:28px;font-weight:800;
-  color:var(--text);letter-spacing:-.4px;
-}
-
-.page-header p{font-size:14px;color:var(--muted);margin-top:5px}
-
-/* ── CARD ── */
-.card{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:28px;
-}
-
-/* ── FORM ── */
-label{
-  display:block;
-  font-size:13px;font-weight:600;
-  color:var(--text);
-  margin-bottom:7px;letter-spacing:.1px;
-}
-
-input[type="text"],
-input[type="number"],
-textarea,select{
-  width:100%;
-  padding:11px 14px;
-  border:1.5px solid var(--border);
-  border-radius:9px;
-  font-family:'DM Sans',sans-serif;
-  font-size:14px;color:var(--text);
-  background:#FAFAF8;outline:none;
-  transition:border-color .2s;
-}
-
-input:focus,textarea:focus,select:focus{
-  border-color:var(--accent);background:#fff;
-}
-
-.field{margin-bottom:18px}
-
-.btn-primary{
-  display:inline-flex;
-  align-items:center;justify-content:center;
-  gap:8px;width:100%;
-  padding:13px 20px;
-  background:var(--accent);color:#fff;
-  border:none;border-radius:10px;
-  font-family:'DM Sans',sans-serif;
-  font-size:14px;font-weight:600;
-  cursor:pointer;
-  transition:background .2s,transform .1s;
-  letter-spacing:.2px;
-}
-
-.btn-primary:hover{background:#2d2d4e}
-.btn-primary:active{transform:scale(.98)}
-.btn-primary:disabled{opacity:.6;cursor:not-allowed}
-
-/* ── UPLOAD ZONE ── */
-.upload-zone{
-  border:2px dashed var(--border);
-  border-radius:var(--radius);
-  padding:40px 20px;
-  text-align:center;
-  background:#FAFAF8;
-  cursor:pointer;
-  transition:border-color .2s,background .2s;
-  position:relative;
-}
-
-.upload-zone:hover,.upload-zone.drag-over{
-  border-color:var(--accent);background:#f0f0f8;
-}
-
-.upload-zone input[type="file"]{
-  position:absolute;inset:0;
-  opacity:0;cursor:pointer;
-  width:100%;height:100%;
-}
-
-.upload-icon{font-size:36px;margin-bottom:10px}
-.upload-label{font-size:14px;font-weight:600;color:var(--text)}
-.upload-sub{font-size:12px;color:var(--muted);margin-top:4px}
-
-/* ── STATUS ── */
-.status-msg{
-  margin-top:16px;padding:12px 16px;
-  border-radius:9px;font-size:13.5px;font-weight:500;
-  display:none;
-}
-
-.status-msg.info{background:#EEF2FF;color:#3730A3}
-.status-msg.success{background:#ECFDF5;color:#065F46}
-.status-msg.error{background:#FEF2F2;color:#991B1B}
-
-/* ── WEATHER ── */
-.weather-card{
-  background:linear-gradient(135deg,#1A1A2E 0%,#16213E 60%,#0F3460 100%);
-  border-radius:var(--radius);
-  padding:32px;color:#fff;
-  display:none;margin-top:20px;
-}
-
-.weather-card .city-name{font-family:'Syne',sans-serif;font-size:26px;font-weight:700}
-.weather-card .country-name{font-size:13px;color:rgba(255,255,255,.5);margin-top:2px}
-.weather-card .temp{font-family:'Syne',sans-serif;font-size:64px;font-weight:800;line-height:1;margin:16px 0 8px}
-.weather-card .desc{font-size:14px;color:rgba(255,255,255,.7);text-transform:capitalize}
-
-.weather-stats{
-  display:flex;gap:12px;
-  margin-top:24px;padding-top:20px;
-  border-top:1px solid rgba(255,255,255,.1);
-  flex-wrap:wrap;
-}
-
-.weather-stat{
-  background:rgba(255,255,255,.08);
-  border-radius:10px;padding:12px 16px;
-  flex:1;min-width:120px;
-}
-
-.weather-stat .stat-label{font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px}
-.weather-stat .stat-val{font-size:18px;font-weight:700;margin-top:4px}
-
-/* ── MORTGAGE ── */
-.mortgage-result{
-  background:var(--accent);color:#fff;
-  border-radius:var(--radius);padding:24px;
-  margin-top:20px;display:none;text-align:center;
-}
-
-.mortgage-result .label{font-size:13px;color:rgba(255,255,255,.6)}
-.mortgage-result .amount{font-family:'Syne',sans-serif;font-size:42px;font-weight:800;margin-top:6px}
-.mortgage-result .sub{font-size:12px;color:rgba(255,255,255,.45);margin-top:4px}
-
-.mortgage-breakdown{
-  display:grid;grid-template-columns:1fr 1fr 1fr;
-  gap:10px;margin-top:16px;
-}
-
-.m-stat{
-  background:rgba(255,255,255,.08);
-  border-radius:8px;padding:12px;text-align:center;
-}
-
-.m-stat-val{font-size:16px;font-weight:700}
-.m-stat-lbl{font-size:11px;color:rgba(255,255,255,.5);margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
-
-/* ── TIP ── */
-.tip-table{
-  display:none;margin-top:20px;
-  border:1.5px solid var(--border);
-  border-radius:var(--radius);overflow:hidden;
-}
-
-.tip-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:14px 20px;font-size:14px;
-  border-bottom:1px solid var(--border);
-}
-
-.tip-row:last-child{border-bottom:none}
-.tip-row.highlight{background:var(--accent);color:#fff;font-weight:700}
-.tip-row .tip-val{font-weight:600}
-
-/* ── WORD COUNTER ── */
-.word-stats{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:12px;margin-top:16px;
-}
-
-.word-stat-box{
-  background:var(--surface);
-  border:1.5px solid var(--border);
-  border-radius:10px;padding:16px;text-align:center;
-}
-
-.word-stat-box .stat-n{
-  font-family:'Syne',sans-serif;
-  font-size:32px;font-weight:800;color:var(--accent);
-}
-
-.word-stat-box .stat-l{
-  font-size:11px;text-transform:uppercase;
-  letter-spacing:1px;color:var(--muted);margin-top:3px;
-}
-
-/* ── GRID / FLEX HELPERS ── */
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.row-flex{display:flex;gap:12px}
-.row-flex input{flex:1}
-
-/* ── IMAGE PREVIEW ── */
-#imagePreviewArea{
-  display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;
-}
-
-#imagePreviewArea img{
-  width:80px;height:80px;object-fit:cover;
-  border-radius:8px;border:2px solid var(--border);
-}
-
-/* ── MOBILE ── */
-@media(max-width:768px){
-  body{flex-direction:column}
-
-  aside{
-    width:100%;min-width:100%;
-    position:relative;height:auto;
-    flex-direction:column;
-  }
-
-  .logo-area{padding:16px 20px 12px}
-
-  nav{
-    flex-direction:row;
-    padding:8px 12px 12px;
-    gap:6px;
-    overflow-x:auto;
-  }
-
-  .nav-btn{
-    flex-direction:column;
-    gap:4px;padding:10px 12px;
-    min-width:64px;
-    align-items:center;
-    font-size:11px;
-  }
-
-  .nav-label{font-size:11px;white-space:nowrap}
-
-  main{
-    margin-left:0;
-    padding:20px 16px;
-    min-height:auto;
-  }
-
-  .grid-2{grid-template-columns:1fr}
-  .weather-stats{flex-direction:column}
-  .word-stats{grid-template-columns:1fr 1fr}
-  .mortgage-breakdown{grid-template-columns:1fr}
-}
-</style>
-</head>
-<body>
-
-<!-- ══════════════ SIDEBAR ══════════════ -->
-<aside>
-  <div class="logo-area">
-    <h1>Daily<span>Kit</span>Box</h1>
-    <p>Smart Utilities</p>
-  </div>
-  <nav>
-    <button class="nav-btn active" onclick="switchTool('jpgToPdf')" id="btn-jpgToPdf">
-      <span class="nav-icon">📄</span>
-      <span class="nav-label">JPG to PDF</span>
+// ─── Nav Button ─────────────────────────────────────────────
+function NavBtn({ icon, label, active, onClick }) {
+  return (
+    <button onClick={onClick} style={{
+      display:"flex", alignItems:"center", gap:10,
+      padding:"11px 14px", borderRadius:10, border:"none",
+      background: active ? G.red : "transparent",
+      color: active ? "#fff" : "rgba(255,255,255,.55)",
+      fontFamily:"'DM Sans',sans-serif", fontSize:13.5, fontWeight: active ? 600 : 500,
+      cursor:"pointer", textAlign:"left", width:"100%",
+    }}>
+      <span style={{ width:30, height:30, borderRadius:7,
+        background: active ? "rgba(255,255,255,.2)" : "rgba(255,255,255,.1)",
+        display:"flex", alignItems:"center", justifyContent:"center",
+        fontSize:15, flexShrink:0 }}>{icon}</span>
+      <span>{label}</span>
     </button>
-    <button class="nav-btn" onclick="switchTool('weather')" id="btn-weather">
-      <span class="nav-icon">🌤️</span>
-      <span class="nav-label">Weather</span>
-    </button>
-    <button class="nav-btn" onclick="switchTool('mortgage')" id="btn-mortgage">
-      <span class="nav-icon">🏠</span>
-      <span class="nav-label">Mortgage</span>
-    </button>
-    <button class="nav-btn" onclick="switchTool('tip')" id="btn-tip">
-      <span class="nav-icon">🍽️</span>
-      <span class="nav-label">Tip Calc</span>
-    </button>
-    <button class="nav-btn" onclick="switchTool('word')" id="btn-word">
-      <span class="nav-icon">✍️</span>
-      <span class="nav-label">Word Count</span>
-    </button>
-  </nav>
-</aside>
+  );
+}
 
-<!-- ══════════════ MAIN ══════════════ -->
-<main>
+// ─── Status Box ──────────────────────────────────────────────
+function Status({ msg, type }) {
+  if (!msg) return null;
+  return <div style={{ ...css.status, ...(type === "info" ? css.info : type === "success" ? css.success : css.error) }}>{msg}</div>;
+}
 
-  <!-- ══ JPG to PDF ══ -->
-  <section id="jpgToPdf" class="tool-section active">
-    <div class="page-header">
-      <h2>JPG to PDF Converter</h2>
-      <p>Combine multiple JPG images into a single PDF — processed entirely in your browser.</p>
-    </div>
+// ═══════════════════════════════════════════════════════════════
+// TOOL: JPG to PDF
+// ═══════════════════════════════════════════════════════════════
+function JpgToPdf() {
+  const [files, setFiles] = useState([]);
+  const [previews, setPreviews] = useState([]);
+  const [pageFit, setPageFit] = useState("fit");
+  const [status, setStatus] = useState(null);
+  const [statusType, setStatusType] = useState("info");
+  const [loading, setLoading] = useState(false);
+  const [drag, setDrag] = useState(false);
+  const pdfReady = usejsPDF();
 
-    <div class="card">
-      <div class="field">
-        <label>Upload JPG / JPEG Images</label>
-        <div class="upload-zone" id="uploadZone">
-          <input type="file" id="imageInput" accept="image/jpeg,image/jpg,image/png" multiple onchange="previewImages()">
-          <div class="upload-icon">📁</div>
-          <div class="upload-label">Click to browse or drag & drop</div>
-          <div class="upload-sub">Supports JPG, JPEG, PNG • Multiple files allowed</div>
-        </div>
-        <div id="imagePreviewArea"></div>
+  const handleFiles = (fileList) => {
+    const arr = Array.from(fileList).filter(f => f.type.match(/image\/(jpeg|jpg|png)/));
+    if (!arr.length) { setStatus("Please select JPG or PNG images only."); setStatusType("error"); return; }
+    setFiles(arr);
+    const urls = arr.map(f => URL.createObjectURL(f));
+    setPreviews(urls);
+    setStatus(`${arr.length} image(s) selected.`);
+    setStatusType("info");
+  };
+
+  const convert = async () => {
+    if (!files.length) { setStatus("Please select at least one image."); setStatusType("error"); return; }
+    if (!pdfReady) { setStatus("PDF library loading, please wait…"); setStatusType("info"); return; }
+
+    setLoading(true);
+    setStatus("Processing images…"); setStatusType("info");
+
+    try {
+      const { jsPDF } = window.jspdf;
+
+      const loadImg = (file) => new Promise((res, rej) => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          const img = new Image();
+          img.onload = () => res({ url: e.target.result, w: img.naturalWidth, h: img.naturalHeight, type: file.type.includes("png") ? "PNG" : "JPEG" });
+          img.onerror = () => rej(new Error("Image load failed"));
+          img.src = e.target.result;
+        };
+        reader.onerror = () => rej(new Error("File read failed"));
+        reader.readAsDataURL(file);
+      });
+
+      const imgs = await Promise.all(files.map(loadImg));
+      let pdf = null;
+
+      imgs.forEach(({ url, w, h, type }, i) => {
+        const orient = w >= h ? "l" : "p";
+        if (i === 0) {
+          pdf = new jsPDF({ orientation: orient, unit: "px", format: [w, h] });
+        } else {
+          pdf.addPage([w, h], orient);
+        }
+        const pw = pdf.internal.pageSize.getWidth();
+        const ph = pdf.internal.pageSize.getHeight();
+        if (pageFit === "fit") {
+          const s = Math.min(pw / w, ph / h);
+          const nw = w * s, nh = h * s;
+          pdf.addImage(url, type, (pw - nw) / 2, (ph - nh) / 2, nw, nh);
+        } else {
+          pdf.addImage(url, type, 0, 0, pw, ph);
+        }
+      });
+
+      pdf.save("DailyKitBox.pdf");
+      setStatus(`✅ PDF with ${files.length} page(s) downloaded!`);
+      setStatusType("success");
+    } catch (e) {
+      setStatus("❌ Error: " + e.message);
+      setStatusType("error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div>
+      <div style={css.pageHdr}>
+        <h2 style={css.pageH2}>JPG to PDF Converter</h2>
+        <p style={css.pageSub}>Combine images into a PDF — processed entirely in your browser.</p>
       </div>
 
-      <div class="field">
-        <label>Page Fit</label>
-        <select id="pageFit">
-          <option value="fit">Fit to page (maintain aspect ratio)</option>
-          <option value="fill">Fill page (stretch to fill)</option>
-        </select>
-      </div>
-
-      <button class="btn-primary" id="convertBtn" onclick="convertToPDF()">
-        ⬇️ Convert & Download PDF
-      </button>
-      <div id="pdfStatus" class="status-msg"></div>
-    </div>
-
-    <div class="card" style="margin-top:20px">
-      <h3 style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px;margin-bottom:8px">Why use PDF format?</h3>
-      <p style="font-size:13.5px;color:var(--muted);line-height:1.7">PDF (Portable Document Format) is the global standard for sharing documents. It preserves layout across all devices, is accepted by every major institution, and is ideal for printing, archiving, and sharing professionally.</p>
-    </div>
-  </section>
-
-  <!-- ══ Weather ══ -->
-  <section id="weather" class="tool-section">
-    <div class="page-header">
-      <h2>Real-Time Weather</h2>
-      <p>Get live weather for any city worldwide using Open-Meteo's free geocoding & forecast API.</p>
-    </div>
-
-    <div class="card">
-      <div class="field">
-        <label>City Name</label>
-        <div class="row-flex">
-          <input type="text" id="cityInput" placeholder="e.g. London, New York, Tokyo" onkeydown="if(event.key==='Enter') getWeather()">
-          <button class="btn-primary" style="width:auto;padding:11px 22px" onclick="getWeather()">Search</button>
-        </div>
-      </div>
-      <div id="weatherStatus" class="status-msg"></div>
-    </div>
-
-    <div class="weather-card" id="weatherCard">
-      <div class="city-name" id="wCity">—</div>
-      <div class="country-name" id="wCountry"></div>
-      <div class="temp" id="wTemp">—</div>
-      <div class="desc" id="wDesc">—</div>
-      <div class="weather-stats">
-        <div class="weather-stat"><div class="stat-label">💧 Humidity</div><div class="stat-val" id="wHumid">—</div></div>
-        <div class="weather-stat"><div class="stat-label">💨 Wind</div><div class="stat-val" id="wWind">—</div></div>
-        <div class="weather-stat"><div class="stat-label">🌡️ Feels Like</div><div class="stat-val" id="wFeels">—</div></div>
-        <div class="weather-stat"><div class="stat-label">🌧️ Rain (1h)</div><div class="stat-val" id="wRain">—</div></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ Mortgage ══ -->
-  <section id="mortgage" class="tool-section">
-    <div class="page-header">
-      <h2>Mortgage Calculator</h2>
-      <p>Estimate your monthly repayments based on standard amortisation formula.</p>
-    </div>
-
-    <div class="card" style="max-width:520px">
-      <div class="field">
-        <label>Property Price</label>
-        <input type="number" id="homePrice" value="350000" placeholder="£ or $">
-      </div>
-      <div class="field">
-        <label>Deposit / Down Payment</label>
-        <input type="number" id="downPayment" value="70000" placeholder="£ or $">
-      </div>
-      <div class="grid-2">
-        <div class="field">
-          <label>Annual Interest Rate (%)</label>
-          <input type="number" id="interestRate" value="5.25" step="0.05">
-        </div>
-        <div class="field">
-          <label>Mortgage Term (Years)</label>
-          <input type="number" id="loanTerm" value="25">
-        </div>
-      </div>
-      <button class="btn-primary" onclick="calculateMortgage()">Calculate Monthly Payment</button>
-
-      <div class="mortgage-result" id="mortgageResult">
-        <div class="label">Estimated Monthly Repayment</div>
-        <div class="amount" id="monthlyPayment">£0</div>
-        <div class="sub" id="mortgageSub">—</div>
-        <div class="mortgage-breakdown">
-          <div class="m-stat">
-            <div class="m-stat-val" id="mLoanAmt">—</div>
-            <div class="m-stat-lbl">Loan Amount</div>
-          </div>
-          <div class="m-stat">
-            <div class="m-stat-val" id="mTotalPaid">—</div>
-            <div class="m-stat-lbl">Total Paid</div>
-          </div>
-          <div class="m-stat">
-            <div class="m-stat-val" id="mTotalInterest">—</div>
-            <div class="m-stat-lbl">Total Interest</div>
+      <div style={css.card}>
+        {/* Upload Zone */}
+        <div style={css.field}>
+          <label style={css.label}>Upload JPG / PNG Images</label>
+          <div
+            style={{ ...css.uploadZone, ...(drag ? { borderColor:G.accent, background:"#f0f0f8" } : {}) }}
+            onDragOver={e => { e.preventDefault(); setDrag(true); }}
+            onDragLeave={() => setDrag(false)}
+            onDrop={e => { e.preventDefault(); setDrag(false); handleFiles(e.dataTransfer.files); }}
+          >
+            <input type="file" accept="image/jpeg,image/jpg,image/png" multiple
+              style={css.uploadInput}
+              onChange={e => handleFiles(e.target.files)} />
+            <div style={{ fontSize:36, marginBottom:10 }}>📁</div>
+            <div style={{ fontSize:14, fontWeight:600 }}>Click to browse or drag & drop</div>
+            <div style={{ fontSize:12, color:G.muted, marginTop:4 }}>Supports JPG, PNG • Multiple files allowed</div>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- ══ Tip Calculator ══ -->
-  <section id="tip" class="tool-section">
-    <div class="page-header">
-      <h2>Tip Calculator</h2>
-      <p>Split the bill fairly. Standard UK/US tipping rates included.</p>
-    </div>
+        {/* Previews */}
+        {previews.length > 0 && (
+          <div style={{ display:"flex", flexWrap:"wrap", gap:10, marginBottom:18 }}>
+            {previews.map((src, i) => (
+              <img key={i} src={src} alt={`preview-${i}`}
+                style={{ width:80, height:80, objectFit:"cover",
+                         borderRadius:8, border:`2px solid ${G.border}` }} />
+            ))}
+          </div>
+        )}
 
-    <div class="card" style="max-width:480px">
-      <div class="field">
-        <label>Bill Amount</label>
-        <input type="number" id="billAmount" value="50" step="0.01" placeholder="Enter total bill">
-      </div>
-
-      <div class="field">
-        <label>Tip Percentage</label>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
-          <button class="tip-preset" onclick="setTip(10)" style="flex:1;padding:9px;border:1.5px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .2s">10%</button>
-          <button class="tip-preset" onclick="setTip(15)" style="flex:1;padding:9px;border:1.5px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .2s">15%</button>
-          <button class="tip-preset" onclick="setTip(18)" style="flex:1;padding:9px;border:1.5px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .2s">18%</button>
-          <button class="tip-preset" onclick="setTip(20)" style="flex:1;padding:9px;border:1.5px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .2s">20%</button>
-          <button class="tip-preset" onclick="setTip(25)" style="flex:1;padding:9px;border:1.5px solid var(--border);border-radius:8px;background:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .2s">25%</button>
+        {/* Page Fit */}
+        <div style={css.field}>
+          <label style={css.label}>Page Fit</label>
+          <select style={css.select} value={pageFit} onChange={e => setPageFit(e.target.value)}>
+            <option value="fit">Fit to page (maintain aspect ratio)</option>
+            <option value="fill">Fill page (stretch to fill)</option>
+          </select>
         </div>
-        <input type="number" id="tipPercent" value="15" placeholder="Custom tip %" onchange="calculateTip()">
+
+        <button style={{ ...css.btnPrimary, opacity: loading ? .6 : 1 }}
+          onClick={convert} disabled={loading}>
+          {loading ? "⏳ Converting…" : "⬇️ Convert & Download PDF"}
+        </button>
+
+        <Status msg={status} type={statusType} />
       </div>
 
-      <div class="field">
-        <label>Number of People</label>
-        <input type="number" id="numPeople" value="2" min="1" placeholder="Split between how many?">
-      </div>
-
-      <button class="btn-primary" onclick="calculateTip()">Calculate Tip</button>
-
-      <div class="tip-table" id="tipTable">
-        <div class="tip-row"><span>Bill Amount</span><span class="tip-val" id="tBill">—</span></div>
-        <div class="tip-row"><span>Tip Amount</span><span class="tip-val" id="tTip">—</span></div>
-        <div class="tip-row"><span>Total Amount</span><span class="tip-val" id="tTotal">—</span></div>
-        <div class="tip-row highlight"><span>Per Person</span><span class="tip-val" id="tPer">—</span></div>
+      <div style={css.card}>
+        <h3 style={{ fontFamily:"'Syne',sans-serif", fontWeight:700, fontSize:15, marginBottom:8 }}>Why PDF format?</h3>
+        <p style={{ fontSize:13.5, color:G.muted, lineHeight:1.7 }}>
+          PDF is the global standard for sharing documents. It preserves layout across all devices,
+          is accepted by every major institution, and is ideal for printing, archiving, and sharing professionally.
+        </p>
       </div>
     </div>
-  </section>
-
-  <!-- ══ Word Counter ══ -->
-  <section id="word" class="tool-section">
-    <div class="page-header">
-      <h2>Word Counter</h2>
-      <p>Instantly count words, characters, sentences, and reading time.</p>
-    </div>
-
-    <div class="card">
-      <div class="field">
-        <label>Paste or Type Your Text</label>
-        <textarea id="wordTextarea" rows="10" placeholder="Start typing or paste your text here..." oninput="countWords()" style="resize:vertical"></textarea>
-      </div>
-      <button class="btn-primary" onclick="countWords()">Analyse Text</button>
-    </div>
-
-    <div class="word-stats" id="wordStats">
-      <div class="word-stat-box"><div class="stat-n" id="wWords">0</div><div class="stat-l">Words</div></div>
-      <div class="word-stat-box"><div class="stat-n" id="wChars">0</div><div class="stat-l">Characters</div></div>
-      <div class="word-stat-box"><div class="stat-n" id="wCharsNoSpace">0</div><div class="stat-l">No Spaces</div></div>
-      <div class="word-stat-box"><div class="stat-n" id="wSentences">0</div><div class="stat-l">Sentences</div></div>
-      <div class="word-stat-box"><div class="stat-n" id="wParagraphs">0</div><div class="stat-l">Paragraphs</div></div>
-      <div class="word-stat-box"><div class="stat-n" id="wReadTime">0 min</div><div class="stat-l">Read Time</div></div>
-    </div>
-  </section>
-
-</main>
-
-<!-- ══════════════ JAVASCRIPT ══════════════ -->
-<script>
-// ── Navigation ──
-function switchTool(id) {
-  document.querySelectorAll('.tool-section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  document.getElementById('btn-' + id).classList.add('active');
+  );
 }
 
-// ── Drag & Drop ──
-const uploadZone = document.getElementById('uploadZone');
-uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
-uploadZone.addEvent
+// ═══════════════════════════════════════════════════════════════
+// TOOL: Weather
+// ═══════════════════════════════════════════════════════════════
+function Weather() {
+  const [city, setCity] = useState("");
+  const [status, setStatus] = useState(null);
+  const [statusType, setStatusType] = useState("info");
+  const [weather, setWeather] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const search = async () => {
+    if (!city.trim()) { setStatus("Please enter a city name."); setStatusType("error"); return; }
+    setLoading(true); setWeather(null);
+    setStatus(`🔍 Searching for "${city}"…`); setStatusType("info");
+    try {
+      const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=en&format=json`);
+      const geoData = await geoRes.json();
+      if (!geoData.results?.length) { setStatus("❌ City not found. Try a different name."); setStatusType("error"); setLoading(false); return; }
+      const { latitude, longitude, name, country } = geoData.results[0];
+      const wxRes = await fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}` +
+        `&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,precipitation&wind_speed_unit=mph&timezone=auto`
+      );
+      const wxData = await wxRes.json();
+      const c = wxData.current;
+      setWeather({ name, country, temp: Math.round(c.temperature_2m), feels: Math.round(c.apparent_temperature),
+        desc: WMO[c.weather_code] || "Unknown", humidity: c.relative_humidity_2m,
+        wind: Math.round(c.wind_speed_10m), rain: c.precipitation });
+      setStatus(null);
+    } catch {
+      setStatus("❌ Network error. Please try again."); setStatusType("error");
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div>
+      <div style={css.pageHdr}>
+        <h2 style={css.pageH2}>Real-Time Weather</h2>
+        <p style={css.pageSub}>Live weather for any city via Open-Meteo's free API.</p>
+      </div>
+
+      <div style={css.card}>
+        <div style={css.field}>
+          <label style={css.label}>City Name</label>
+          <div style={css.rowFlex}>
+            <input style={{ ...css.input, flex:1 }} value={city} onChange={e => setCity(e.target.value)}
+              placeholder="e.g. London, Karachi, Tokyo"
+              onKeyDown={e => e.key === "Enter" && search()} />
+            <button style={{ ...css.btnPrimary, ...css.btnSmall, opacity: loading ? .6 : 1 }}
+              onClick={search} disabled={loading}>
+              {loading ? "…" : "Search"}
+            </button>
+          </div>
+        </div>
+        <Status msg={status} type={statusType} />
+      </div>
+
+      {weather && (
+        <div style={{ background:"linear-gradient(135deg,#1A1A2E 0%,#16213E 60%,#0F3460 100%)",
+                      borderRadius:14, padding:32, color:"#fff", marginTop:4 }}>
+          <div style={{ fontFamily:"'Syne',sans-serif", fontSize:28, fontWeight:800 }}>{weather.name}</div>
+          <div style={{ fontSize:13, color:"rgba(255,255,255,.5)", marginTop:2 }}>{weather.country}</div>
+          <div style={{ fontFamily:"'Syne',sans-serif", fontSize:68, fontWeight:800, lineHeight:1, margin:"16px 0 8px" }}>
+            {weather.temp}°C
+          </div>
+          <div style={{ fontSize:16, color:"rgba(255,255,255,.75)" }}>{weather.desc}</div>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:10, marginTop:24,
+                        paddingTop:20, borderTop:"1px solid rgba(255,255,255,.1)" }}>
+            {[
+              { label:"💧 Humidity", val: weather.humidity + "%" },
+              { label:"💨 Wind", val: weather.wind + " mph" },
+              { label:"🌡️ Feels Like", val: weather.feels + "°C" },
+              { label:"🌧️ Rain (1h)", val: weather.rain + " mm" },
+            ].map(({ label, val }) => (
+              <div key={label} style={{ background:"rgba(255,255,255,.08)", borderRadius:10, padding:"12px 14px" }}>
+                <div style={{ fontSize:11, color:"rgba(255,255,255,.5)", textTransform:"uppercase", letterSpacing:1 }}>{label}</div>
+                <div style={{ fontSize:20, fontWeight:700, marginTop:4 }}>{val}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TOOL: Mortgage
+// ═══════════════════════════════════════════════════════════════
+function Mortgage() {
+  const [price, setPrice] = useState(350000);
+  const [deposit, setDeposit] = useState(70000);
+  const [rate, setRate] = useState(5.25);
+  const [term, setTerm] = useState(25);
+  const [result, setResult] = useState(null);
+
+  const calc = () => {
+    const P = price - deposit;
+    if (P <= 0 || !rate || !term) return;
+    const r = rate / 100 / 12;
+    const n = term * 12;
+    const monthly = r === 0 ? P / n : P * (r * Math.pow(1+r,n)) / (Math.pow(1+r,n)-1);
+    const totalPaid = monthly * n;
+    setResult({ monthly, loan: P, totalPaid, interest: totalPaid - P });
+  };
+
+  const fmt = v => "£" + Math.round(v).toLocaleString("en-GB");
+
+  return (
+    <div>
+      <div style={css.pageHdr}>
+        <h2 style={css.pageH2}>Mortgage Calculator</h2>
+        <p style={css.pageSub}>Estimate monthly repayments with UK/US amortisation formula.</p>
+      </div>
+
+      <div style={{ ...css.card, maxWidth:520 }}>
+        <div style={css.field}>
+          <label style={css.label}>Property Price (£/$)</label>
+          <input style={css.input} type="number" value={price} onChange={e => setPrice(+e.target.value)} />
+        </div>
+        <div style={css.field}>
+          <label style={css.label}>Deposit / Down Payment</label>
+          <input style={css.input} type="number" value={deposit} onChange={e => setDeposit(+e.target.value)} />
+        </div>
+        <div style={css.grid2}>
+          <div style={css.field}>
+            <label style={css.label}>Annual Interest Rate (%)</label>
+            <input style={css.input} type="number" value={rate} step="0.05" onChange={e => setRate(+e.target.value)} />
+          </div>
+          <div style={css.field}>
+            <label style={css.label}>Term (Years)</label>
+            <input style={css.input} type="number" value={term} onChange={e => setTerm(+e.target.value)} />
+          </div>
+        </div>
+        <button style={css.btnPrimary} onClick={calc}>Calculate Monthly Payment</button>
+
+        {result && (
+          <div style={{ background:G.accent, color:"#fff", borderRadius:14, padding:24, marginTop:20, textAlign:"center" }}>
+            <div style={{ fontSize:13, color:"rgba(255,255,255,.6)" }}>Estimated Monthly Repayment</div>
+            <div style={{ fontFamily:"'Syne',sans-serif", fontSize:44, fontWeight:800, marginTop:6 }}>
+              {fmt(result.monthly)}
+            </div>
+            <div style={{ fontSize:12, color:"rgba(255,255,255,.45)", marginTop:4 }}>
+              Over {term} years | Loan: {fmt(result.loan)}
+            </div>
+            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:10, marginTop:16 }}>
+              {[
+                { label:"Loan Amount", val: fmt(result.loan) },
+                { label:"Total Paid", val: fmt(result.totalPaid) },
+                { label:"Total Interest", val: fmt(result.interest) },
+              ].map(({ label, val }) => (
+                <div key={label} style={{ background:"rgba(255,255,255,.08)", borderRadius:8, padding:12 }}>
+                  <div style={{ fontSize:15, fontWeight:700 }}>{val}</div>
+                  <div style={{ fontSize:11, color:"rgba(255,255,255,.5)", marginTop:3, textTransform:"uppercase", letterSpacing:.5 }}>{label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TOOL: Tip Calculator
+// ═══════════════════════════════════════════════════════════════
+function TipCalc() {
+  const [bill, setBill] = useState(50);
+  const [tipPct, setTipPct] = useState(15);
+  const [people, setPeople] = useState(2);
+  const [activePreset, setActivePreset] = useState(15);
+
+  const tipAmt = bill * t
