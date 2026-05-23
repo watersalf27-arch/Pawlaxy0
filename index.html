@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'DM Sans', sans-serif; }
+body { font-family: 'DM Sans', sans-serif; background-color: #F5F4F0; color: #1C1C1C; }
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #f1f1f1; }
 ::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
@@ -46,7 +47,8 @@ function NavBtn({ icon, label, active, onClick }) {
       background: active ? G.red : "transparent",
       color: active ? "#fff" : "rgba(255,255,255,.6)",
       fontFamily:"'DM Sans',sans-serif", fontSize:14,
-      fontWeight: active ? 600 : 400, cursor:"pointer", textAlign:"left"
+      fontWeight: active ? 600 : 400, cursor:"pointer", textAlign:"left",
+      marginBottom: 6
     }}>
       <span style={{
         width:32, height:32, borderRadius:8, fontSize:16,
@@ -204,9 +206,7 @@ function JpgToPdf() {
   );
 }
 
-/* ══════════════════════════════════════════
-   TOOL 2: Weather
-══════════════════════════════════════════ */
+/* ── Weather Tool ── */
 function Weather() {
   const [city, setCity] = useState("");
   const [status, setStatus] = useState(null);
@@ -287,9 +287,7 @@ function Weather() {
   );
 }
 
-/* ══════════════════════════════════════════
-   TOOL 3: Mortgage
-══════════════════════════════════════════ */
+/* ── Mortgage Tool ── */
 function Mortgage() {
   const [price, setPrice] = useState(350000);
   const [deposit, setDeposit] = useState(70000);
@@ -368,18 +366,19 @@ function Mortgage() {
   );
 }
 
-/* ══════════════════════════════════════════
-   TOOL 4: Tip Calculator
-══════════════════════════════════════════ */
+/* ── Tip Calculator Tool ── */
 function TipCalc() {
   const [bill, setBill] = useState(50);
   const [tipPct, setTipPct] = useState(15);
   const [people, setPeople] = useState(2);
   const [active, setActive] = useState(15);
+  const [customTip, setCustomTip] = useState("");
 
-  const tipAmt = (bill * tipPct / 100) || 0;
+  const actualTipPct = active === "custom" ? (parseFloat(customTip) || 0) : tipPct;
+  const tipAmt = (bill * actualTipPct / 100) || 0;
   const total = (bill || 0) + tipAmt;
   const perPerson = total / (people || 1);
+  const tipPerPerson = tipAmt / (people || 1);
   const fmt = v => "$" + v.toFixed(2);
 
   const inputStyle = { width:"100%", padding:"11px 14px", border:`1.5px solid ${G.border}`,
@@ -396,7 +395,7 @@ function TipCalc() {
       <div style={{ background:G.surface, border:`1px solid ${G.border}`, borderRadius:14, padding:28, maxWidth:480 }}>
         <div style={{ marginBottom:18 }}>
           <label style={{ display:"block", fontSize:13, fontWeight:600, marginBottom:8 }}>Bill Amount ($)</label>
-          <input type="number" value={bill} step="0.01" onChange={e => setBill(+e.target.value)} style={inputStyle} />
+          <input type="number" value={bill} step="0.01" onChange={e => setBill(parseFloat(e.target.value) || 0)} style={inputStyle} />
         </div>
 
         <div style={{ marginBottom:18 }}>
@@ -404,5 +403,4 @@ function TipCalc() {
           <div style={{ display:"flex", gap:8, marginBottom:10, flexWrap:"wrap" }}>
             {[10, 15, 18, 20, 25].map(p => (
               <button key={p} onClick={() => { setTipPct(p); setActive(p); }}
-                style={{ flex:1, minWidth:50, padding:"9px 4px",
-             
+                style={{ flex:1, minWidth:50, padding:"9px 
