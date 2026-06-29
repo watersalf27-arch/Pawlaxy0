@@ -14,7 +14,11 @@ const files = Array.from(input.files);
 
 files.forEach(file => {
 
-if (!file.type.startsWith("image/")) return;
+const allowed = [".jpg", ".jpeg", ".png"];
+
+const extension = "." + file.name.split(".").pop().toLowerCase();
+
+if (!allowed.includes(extension)) return;
 
 selectedImages.push(file);
 
