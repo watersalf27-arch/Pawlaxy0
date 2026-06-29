@@ -49,13 +49,10 @@ card.innerHTML = `
 </div>
 
 <button class="delete-btn">✕</button>
-let total = selectedImages.reduce((sum, file) => sum + file.size, 0);
 
-imageCount.textContent = selectedImages.length + " Images";
-
-totalSize.textContent = (total / 1024 / 1024).toFixed(2) + " MB";
 </div>
 `;
+
 card.querySelector(".delete-btn").addEventListener("click", () => {
 
 selectedImages = selectedImages.filter(f => f !== file);
@@ -64,14 +61,25 @@ card.remove();
 
 status.textContent = selectedImages.length + " image(s) selected.";
 
+let total = selectedImages.reduce((sum, file) => sum + file.size, 0);
+
+imageCount.textContent = selectedImages.length + " Images";
+
+totalSize.textContent = (total / 1024 / 1024).toFixed(2) + " MB";
+
+if(selectedImages.length === 0){
+progressBar.style.width = "0%";
+progressText.textContent = "";
+status.textContent = "Please select images.";
+}
+
 });
+
 preview.appendChild(card);
 
 };
 
 reader.readAsDataURL(file);
-
-});
 
 status.textContent =
 selectedImages.length + " image(s) selected.";
