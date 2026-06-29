@@ -150,7 +150,8 @@ document.getElementById("pageSize").value;
 
 const orientation =
 document.getElementById("orientation").value;
-
+const quality =
+document.getElementById("quality").value;
 const pdf = new jsPDF({
 
 orientation: orientation,
