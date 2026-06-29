@@ -220,23 +220,14 @@ file.type === "image/png"
 : "JPEG";
 
 pdf.addImage(
-
 dataUrl,
-
 type,
-
 x,
-
 y,
-
 width,
-
 height,
-
 undefined,
-
-"FAST"
-
+quality
 );
 
 const percent =
