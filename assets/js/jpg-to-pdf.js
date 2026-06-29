@@ -45,6 +45,15 @@ card.innerHTML = `
 
 </div>
 `;
+card.querySelector(".delete-btn").addEventListener("click", () => {
+
+selectedImages = selectedImages.filter(f => f !== file);
+
+card.remove();
+
+status.textContent = selectedImages.length + " image(s) selected.";
+
+});
 preview.appendChild(card);
 
 };
