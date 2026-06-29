@@ -41,6 +41,8 @@ card.innerHTML = `
 <small>${Math.round(file.size/1024)} KB</small>
 </div>
 
+<button class="delete-btn">✕</button>
+
 </div>
 `;
 preview.appendChild(card);
