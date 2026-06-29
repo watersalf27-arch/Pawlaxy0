@@ -1,3 +1,5 @@
+const imageCount = document.getElementById("imageCount");
+const totalSize = document.getElementById("totalSize");
 const progressBar = document.getElementById("progressBar");
 const progressText = document.getElementById("progressText");
 const input = document.getElementById("images");
