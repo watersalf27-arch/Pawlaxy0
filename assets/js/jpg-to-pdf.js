@@ -64,8 +64,28 @@ const card = document.createElement("div");
 card.className = "preview-card";
 
 card.innerHTML = `
+selectedImages.push(file);
+
+const reader = new FileReader();
+
+reader.onload = function(e){
+
+const card = document.createElement("div");
+
+card.className = "preview-card";
+
+card.innerHTML = `
 
 <div class="preview-item">
+
+<img src="${e.target.result}" alt="${file.name}">
+
+<div class="preview-info">
+
+<strong>${file.name}</strong>
+
+<small>${Math.round(file.size/1024)} KB</small
+
 
 <img src="${e.target.result}" alt="${file.name}">
 
