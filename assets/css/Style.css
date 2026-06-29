@@ -309,3 +309,17 @@ transition:.3s;
 background:#DC2626;
 transform:scale(1.1);
 }
+.tool-stats{
+display:flex;
+justify-content:space-between;
+margin:15px 0;
+padding:12px;
+background:#F5F7FA;
+border-radius:12px;
+font-weight:600;
+font-size:14px;
+}
+
+.tool-stats span{
+color:#374151;
+}
