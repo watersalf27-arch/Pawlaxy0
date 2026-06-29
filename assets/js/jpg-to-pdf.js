@@ -113,6 +113,7 @@ card.querySelector(".delete-btn").addEventListener("click",()=>{
 selectedImages=selectedImages.filter(f=>f!==file);
 
 card.remove();
+imageRotations.delete(file);
 
 updateStats();
 
